@@ -10,6 +10,5 @@ if [ $(id -u) != 0 ]; then
     exit 1
 fi
 
-# have at least gstreamer 0.10
 # header files of libmpg123 via source install?
-pkg install audio/mpg123 multimedia/gstreamer-plugins-ugly
+pkg install audio/mpg123 multimedia/gstreamer1-plugins-ugly
