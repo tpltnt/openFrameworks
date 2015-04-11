@@ -72,5 +72,6 @@ openFrameworks depends on third party code.
 
 * [gstreamer](http://gstreamer.freedesktop.org/)
   * [ugly plugins](http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-ugly-plugins/html/)
+* [libmpg123](http://www.mpg123.org/)
 * optional
   * [Code::Blocks](http://codeblocks.org/) free/libre C++ IDE
