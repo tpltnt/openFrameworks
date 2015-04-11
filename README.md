@@ -70,6 +70,7 @@ Dependencies
 ------------
 openFrameworks depends on third party code.
 
-
+* [gstreamer](http://gstreamer.freedesktop.org/)
+  * [ugly plugins](http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-ugly-plugins/html/)
 * optional
   * [Code::Blocks](http://codeblocks.org/) free/libre C++ IDE
