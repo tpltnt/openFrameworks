@@ -37,6 +37,17 @@ if [ $exit_code != 0 ]; then
 fi
 
 
+echo "installing remaining codecs"
+# header files of libmpg123 via source install?
+pkg install audio/mpg123 multimedia/gstreamer1-plugins-ugly
+exit_code=$?
+if [ $exit_code != 0 ]; then
+	echo "error installing mpg123 or gstreamer, there could be an error with your internet connection"
+    echo "if the error persists, please report an issue in github: http://github.com/openframeworks/openFrameworks/issues"
+	exit $exit_code
+fi
+
+
 echo "installing GTK 3"
 pkg install x11-toolkits/gtk30
 exit_code=$?
