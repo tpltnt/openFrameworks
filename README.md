@@ -69,3 +69,7 @@ openFrameworks uses [Semantic Versioning](http://semver.org/), although strict a
 Dependencies
 ------------
 openFrameworks depends on third party code.
+
+
+* optional
+  * [Code::Blocks](http://codeblocks.org/) free/libre C++ IDE
