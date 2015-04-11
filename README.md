@@ -65,3 +65,7 @@ To set up the project generator submodule, use the command `git submodule init` 
 Versioning
 ----------
 openFrameworks uses [Semantic Versioning](http://semver.org/), although strict adherence will only come into effect at version 1.0.0.
+
+Dependencies
+------------
+openFrameworks depends on third party code.
