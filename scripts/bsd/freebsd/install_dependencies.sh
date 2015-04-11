@@ -61,14 +61,16 @@ fi
 echo "installing oF dependencies"
 echo "installing dependencies *not* ported yet"
 exit 23
-pkg install
-freeglut3-dev
-libasound2-dev
-libxmu-dev
-libxxf86vm-dev
-g++
-libgl1-mesa-dev
-libglu1-mesa-dev
+pkg install freeglut
+# libasound2-dev
+libXmu
+libXxf86vm
+#g++
+libGL
+libGLU
+libglapi
+libglesv2
+# TODO
 libraw1394-dev
 libudev-dev
 libdrm-dev
