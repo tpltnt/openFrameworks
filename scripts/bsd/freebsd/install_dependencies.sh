@@ -15,20 +15,11 @@ pkg update
 
 echo "installing gstreamer"
 # install gstreamer 1.0
-# * gstreamer-ffmpeg not yet at 1.0
-# * FreeBSD has no ALSA, only OSS, therefore no gstreamer${GSTREAMER_VERSION}-alsa
 pkg install gstreamer1 gstreamer1-libav
 gstreamer-ffmpeg \
 gstreamer1-plugins-pulse \
 # base (partial?), good, bad, ugly
 gstreamer1-plugins
-# gstreamer plugins base not explixit ports, but
-# gstreamer1-plugins-cdparanoia, gstreamer-plugins-gio,
-# gstreamer1-plugins-libvisual, gstreamer1-plugins-ogg
-# gstreamer1-plugins-pango, gstreamer1-plugins-theora
-# gstreamer1-plugins-v4l2, gstreamer1-plugins-vorbis
-# gstreamer1-plugins-ximagesrc
-# complete list: http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-plugins/html/
 exit_code=$?
 if [ $exit_code != 0 ]; then
 	echo "error installing gstreamer, there could be an error with your internet connection"
