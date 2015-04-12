@@ -15,7 +15,7 @@ pkg update
 echo "installing gstreamer"
 # install gstreamer 1.0 + base (partial?), good, bad, ugly
 pkg install gstreamer1 gstreamer1-libav gstreamer-ffmpeg \
-    gstreamer1-plugins-pulse install gstreamer1-plugins
+    gstreamer1-plugins-pulse gstreamer1-plugins
 exit_code=$?
 if [ $exit_code != 0 ]; then
 	echo "error installing gstreamer, there could be an error with your internet connection"
