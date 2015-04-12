@@ -85,6 +85,9 @@ enum ofTargetPlatform{
 	#define TARGET_NO_THREADS
 	#define TARGET_PROGRAMMABLE_GL
 	#define TARGET_IMPLEMENTS_URL_LOADER
+#elif defined(__FreeBSD__)
+	#define TARGET_FREEBSD
+	#define TARGET_OPENGLES
 #else
 	#define TARGET_LINUX
 #endif
@@ -239,6 +242,25 @@ enum ofTargetPlatform{
 	#define TARGET_LITTLE_ENDIAN
 #endif
 
+#ifdef TARGET_FREEBSD
+	#include <unistd.h>
+	#include "GL/glew.h"
+	#include <OpenGL/gl.h>
+
+	#include <GLES/gl.h>
+	#define GL_GLEXT_PROTOTYPES
+	#include <GLES/glext.h>
+
+	#include <GLES2/gl2.h>
+	#include <GLES2/gl2ext.h>
+	#include "EGL/egl.h"
+	#include "EGL/eglext.h"
+
+	#if defined(__LITTLE_ENDIAN__)
+		#define TARGET_LITTLE_ENDIAN		// Intel CPU
+	#endif
+#endif
+
 #include "tesselator.h"
 typedef TESSindex ofIndexType;
 
@@ -293,6 +315,10 @@ typedef TESSindex ofIndexType;
 	#elif defined(TARGET_OF_IOS)
 
 		#define OF_VIDEO_CAPTURE_IOS
+
+	#elif defined(TARGET_FREEBSD)
+
+		#define OF_VIDEO_CAPTURE_GSTREAMER
 
 	#endif
 #endif
