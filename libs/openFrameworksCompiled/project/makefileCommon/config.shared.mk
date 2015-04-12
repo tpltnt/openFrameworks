@@ -87,6 +87,8 @@ ifndef PLATFORM_LIB_SUBPATH
         PLATFORM_LIB_SUBPATH=osx
     else ifeq ($(PLATFORM_OS),emscripten)
         PLATFORM_LIB_SUBPATH=emscripten
+    else ifeq ($(PLATFORM_OS),FreeBSD)
+        PLATFORM_LIB_SUBPATH=freebsd
     else
         $(error This makefile does not support your operating system)
     endif
