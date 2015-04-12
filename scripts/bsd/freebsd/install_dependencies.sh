@@ -59,36 +59,10 @@ fi
 
 
 echo "installing oF dependencies"
-echo "installing dependencies *not* ported yet"
-exit 23
-pkg install freeglut
-libXmu
-libXxf86vm
-#g++
-libGL
-libGLU
-libglapi
-libglesv2
-libdc1394
-libdrm
-libtheora
-libvorbis
-graphics/glew
-openal-soft
-libsndfile
-freeimage
-cairo
-py-lxml
-py-argparse
-freetype2
-openssl
-
-libpulse-dev
-libusb-1.0-0-dev
-libopencv-dev
-libegl1-mesa-dev
-libgles1-mesa-dev
-libgles2-mesa-dev
+pkg install freeglut libXmu libXxf86vm libGL libGLU libglapi libglesv2 \
+    libEGL libdc1394 libdrm libtheora libvorbis glew openal-soft \
+    libsndfile freeimage cairo py-lxml py-argparse freetype2 openssl \
+    pulseaudio opencv
 exit_code=$?
 if [ $exit_code != 0 ]; then
     echo "error installing dependencies, there could be an error with your internet connection"

@@ -7,3 +7,10 @@ things to do
 * upgrade freeglut port to 3.0
 * check if clang/LLVM can replace g++/gcc for oF
 * replace OpenSSL with libreSSL
+
+
+references
+----------
+* FreeBSD wiki
+  * [USB](https://wiki.freebsd.org/USB)
+  * [graphics](https://wiki.freebsd.org/Graphics)
