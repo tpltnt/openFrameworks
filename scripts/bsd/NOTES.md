@@ -21,6 +21,7 @@ general notes
 things to do
 ------------
 * port udev code to devd
+  * e.g. ofGstVideoGrabber (currently disabled because of missing devd support)
 * port libraw1394 for [FireWire](https://wiki.freebsd.org/FireWire)
 * upgrade freeglut port to 3.0
 * replace OpenSSL with libreSSL
