@@ -278,9 +278,7 @@ typedef TESSindex ofIndexType;
 // check if any video capture system is already defined from the compiler
 #if !defined(OF_VIDEO_CAPTURE_GSTREAMER) && !defined(OF_VIDEO_CAPTURE_QUICKTIME) && !defined(OF_VIDEO_CAPTURE_DIRECTSHOW) && !defined(OF_VIDEO_CAPTURE_ANDROID) && !defined(OF_VIDEO_CAPTURE_IOS)
 	#ifdef TARGET_LINUX
-
 		#define OF_VIDEO_CAPTURE_GSTREAMER
-
 	#elif defined(TARGET_OSX)
 		//on 10.6 and below we can use the old grabber
 		#ifndef MAC_OS_X_VERSION_10_7
@@ -288,38 +286,25 @@ typedef TESSindex ofIndexType;
 		#else
 			#define OF_VIDEO_CAPTURE_QTKIT
         #endif
-
 	#elif defined (TARGET_WIN32)
-
 		// comment out this following line, if you'd like to use the
 		// quicktime capture interface on windows
 		// if not, we default to videoInput library for
 		// direct show capture...
-
 		#define OF_SWITCH_TO_DSHOW_FOR_WIN_VIDCAP
-
 		#ifdef OF_SWITCH_TO_DSHOW_FOR_WIN_VIDCAP
 			#define OF_VIDEO_CAPTURE_DIRECTSHOW
 		#else
 			#define OF_VIDEO_CAPTURE_QUICKTIME
 		#endif
-
 	#elif defined(TARGET_ANDROID)
-
 		#define OF_VIDEO_CAPTURE_ANDROID
-
 	#elif defined(TARGET_EMSCRIPTEN)
-
 		#define OF_VIDEO_CAPTURE_EMSCRIPTEN
-
 	#elif defined(TARGET_OF_IOS)
-
 		#define OF_VIDEO_CAPTURE_IOS
-
 	#elif defined(TARGET_FREEBSD)
-
 		#define OF_VIDEO_CAPTURE_GSTREAMER
-
 	#endif
 #endif
 
