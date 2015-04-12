@@ -48,7 +48,7 @@ fi
 echo ">>> installing oF dependencies <<<"
 pkg install freeglut libXmu libXxf86vm libGL libGLU libglapi libglesv2 \
     libEGL libdc1394 libdrm libtheora libvorbis glew openal-soft \
-    libsndfile freeimage cairo py-lxml py-argparse freetype2 openssl \
+    libsndfile freeimage cairo py27-lxml py27-argparse freetype2 openssl \
     pulseaudio opencv
 exit_code=$?
 if [ $exit_code != 0 ]; then
