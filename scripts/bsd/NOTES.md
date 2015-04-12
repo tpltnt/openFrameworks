@@ -27,6 +27,9 @@ things to do
 
 references
 ----------
+* [FreeBSD handbook](https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/)
+* [Porter's handbook](https://www.freebsd.org/doc/en_US.ISO8859-1/books/porters-handbook)
+* [Developer's handbook](https://www.freebsd.org/doc/en_US.ISO8859-1/books/developers-handbook)
 * FreeBSD wiki
   * [USB](https://wiki.freebsd.org/USB)
   * [graphics](https://wiki.freebsd.org/Graphics)
