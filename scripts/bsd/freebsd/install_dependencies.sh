@@ -12,7 +12,7 @@ fi
 # update local package cache
 pkg update
 
-echo "installing gstreamer"
+echo ">>> installing gstreamer <<<"
 # install gstreamer 1.0 + base (partial?), good, bad, ugly
 pkg install gstreamer1 gstreamer1-libav gstreamer-ffmpeg \
     gstreamer1-plugins-pulse gstreamer1-plugins
@@ -24,7 +24,7 @@ if [ $exit_code != 0 ]; then
 fi
 
 
-echo "installing remaining codecs"
+echo ">>> installing remaining codecs <<<"
 # header files of libmpg123 via source install?
 pkg install audio/mpg123 multimedia/gstreamer1-plugins-ugly
 exit_code=$?
@@ -35,7 +35,7 @@ if [ $exit_code != 0 ]; then
 fi
 
 
-echo "installing GTK 3"
+echo ">>> installing GTK 3 <<<"
 pkg install x11-toolkits/gtk30
 exit_code=$?
 if [ $exit_code != 0 ]; then
@@ -45,7 +45,7 @@ if [ $exit_code != 0 ]; then
 fi
 
 
-echo "installing oF dependencies"
+echo ">>> installing oF dependencies <<<"
 pkg install freeglut libXmu libXxf86vm libGL libGLU libglapi libglesv2 \
     libEGL libdc1394 libdrm libtheora libvorbis glew openal-soft \
     libsndfile freeimage cairo py-lxml py-argparse freetype2 openssl \
