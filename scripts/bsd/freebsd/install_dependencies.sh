@@ -73,16 +73,16 @@ libdc1394
 libdrm
 libtheora
 libvorbis
+graphics/glew
+openal-soft
+libsndfile
+freeimage
+cairo
+py-lxml
+py-argparse
+freetype2
+openssl
 
-libglew-dev
-libopenal-dev
-libsndfile-dev
-libfreeimage-dev
-libcairo2-dev
-python-lxml
-python-argparse
-libfreetype6-dev
-libssl-dev
 libpulse-dev
 libusb-1.0-0-dev
 libopencv-dev
