@@ -15,6 +15,8 @@ general notes
   * gstreamer1-plugins-ximagesrc
 * gstreamer-ffmpeg not yet at 1.0
 * FreeBSD has no ALSA, only OSS, therefore no gstreamer${GSTREAMER_VERSION}-alsa
+* use `gmake` instead of `make`
+
 
 things to do
 ------------
