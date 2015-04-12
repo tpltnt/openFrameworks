@@ -330,6 +330,8 @@ typedef TESSindex ofIndexType;
         #endif
     #elif defined(TARGET_EMSCRIPTEN)
         #define OF_VIDEO_PLAYER_EMSCRIPTEN
+    #elif defined(TARGET_FREEBSD)
+        #define OF_VIDEO_PLAYER_GSTREAMER
     #else
         #define OF_VIDEO_PLAYER_QUICKTIME
     #endif
