@@ -383,7 +383,7 @@ PLATFORM_LIBRARY_SEARCH_PATHS =
 # PLATFORM CXX
 #    Don't want to use a default compiler?
 ################################################################################
-#PLATFORM_CXX=
+PLATFORM_CXX=clang++
 
 afterplatform: after
 	@echo
