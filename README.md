@@ -68,10 +68,34 @@ openFrameworks uses [Semantic Versioning](http://semver.org/), although strict a
 
 Dependencies
 ------------
-openFrameworks depends on third party code.
+openFrameworks depends on third party code. In particular:
 
 * [gstreamer](http://gstreamer.freedesktop.org/)
-  * [ugly plugins](http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-ugly-plugins/html/)
 * [libmpg123](http://www.mpg123.org/)
+* [FreeGLUT](http://freeglut.sourceforge.net/)
+* [alsa-lib](http://www.alsa-project.org/)
+* [X.org](http://www.x.org/wiki/)
+  * libXmu-devel
+  * libXxf86vm-devel
+  * libXrandr-devel
+  * libXi-devel
+* [g++](https://gcc.gnu.org/)
+* [libraw1394](http://sourceforge.net/projects/libraw1394/)
+* [libudev](http://www.freedesktop.org/software/systemd/libudev/)
+* [libtheora](http://www.theora.org/)
+* [libvorbis](https://xiph.org/vorbis/)
+* [OpenAL](http://www.openal-soft.org/)
+* [libsndfile](http://www.mega-nerd.com/libsndfile/)
+* [python-lxml](http://lxml.de/)
+* [GLEW](http://glew.sourceforge.net/)
+* [flac](https://xiph.org/flac/)
+* [FreeImage](http://freeimage.sourceforge.net/)
+* [cairo](http://cairographics.org/)
+* [PulseAudio](https://wiki.freedesktop.org/www/Software/PulseAudio/)
+* [OpenSSL](https://www.openssl.org/)
+* [libusb](http://libusb.info/)/[libusbx](http://libusbx.org/)
+* [GTK](http://www.gtk.org/)
+* [OpenCV](http://opencv.org/)
+* [libDRM](http://dri.freedesktop.org/wiki/DRM)
 * optional
   * [Code::Blocks](http://codeblocks.org/) free/libre C++ IDE
