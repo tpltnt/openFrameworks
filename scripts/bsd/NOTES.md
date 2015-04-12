@@ -34,3 +34,4 @@ references
 * FreeBSD wiki
   * [USB](https://wiki.freebsd.org/USB)
   * [graphics](https://wiki.freebsd.org/Graphics)
+* [devd(8)](https://www.freebsd.org/cgi/man.cgi?query=devd&manpath=FreeBSD+10.1-RELEASE&format=html)
