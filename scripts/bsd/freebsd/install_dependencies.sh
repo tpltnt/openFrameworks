@@ -61,11 +61,7 @@ fi
 echo "installing oF dependencies"
 echo "installing dependencies *not* ported yet"
 exit 23
-# * libdc1394 equivalent to libraw1394-dev for oF?
-#   * libraw1394 needs to be ported https://wiki.freebsd.org/FireWire
-# * devd FreeBSD equivalient to udev -> oF needs to be ported
 pkg install freeglut
-# libasound2-dev
 libXmu
 libXxf86vm
 #g++
@@ -74,9 +70,10 @@ libGLU
 libglapi
 libglesv2
 libdc1394
-# libraw1394-dev
-# libudev-dev - devd adjustments needed
-libdrm-dev
+libdrm
+libtheora
+libvorbis
+
 libglew-dev
 libopenal-dev
 libsndfile-dev
