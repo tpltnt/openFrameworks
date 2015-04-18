@@ -408,7 +408,9 @@ typedef ofBaseApp ofSimpleApp;
 	#include <memory>
 #else
 	#include <tr1/unordered_map>
-	using std::tr1::unordered_map;
+	#ifndef TARGET_FREEBSD
+		using std::tr1::unordered_map;
+	#endif
 #endif
 
 using namespace std;
