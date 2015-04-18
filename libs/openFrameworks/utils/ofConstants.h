@@ -244,19 +244,23 @@ enum ofTargetPlatform{
 
 #ifdef TARGET_FREEBSD
 	#include <unistd.h>
-	#include "GL/glew.h"
+//	#include "GL/glew.h"
+	#include <GL/glew.h>
 	#include <GL/gl.h>
 
-	#include <GLES/gl.h>
-	#define GL_GLEXT_PROTOTYPES
-	#include <GLES/glext.h>
-	#include <GLES2/gl2.h>
-	#include <GLES2/gl2ext.h>
+//	#include <GLES/gl.h>
+//	#define GL_GLEXT_PROTOTYPES
+//	#include <GLES/glext.h>
+//	#include <GLES2/gl2.h>
+//	#include <GLES2/gl2ext.h>
 //	#include <GLES3/gl3.h>
 //	#include <GLES3/gl3ext.h>
 
-	#include "EGL/egl.h"
-	#include "EGL/eglext.h"
+//	#include "EGL/egl.h"
+//	#include "EGL/eglext.h"
+//	#include <EGL/egl.h>
+//	#include <EGL/eglext.h>
+
 
 	#if defined(__LITTLE_ENDIAN__)
 		#define TARGET_LITTLE_ENDIAN		// Intel CPU
