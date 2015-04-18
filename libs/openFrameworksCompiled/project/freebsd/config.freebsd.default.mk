@@ -130,8 +130,8 @@ PLATFORM_REQUIRED_ADDONS =
 
 PLATFORM_CFLAGS += -march=native
 PLATFORM_CFLAGS += -mtune=native
-#PLATFORM_CFLAGS += -std=c++11
-PLATFORM_CFLAGS +=-Wall -std=c++0x
+PLATFORM_CFLAGS += -std=c++11
+PLATFORM_CFLAGS += -Wall -std=c++0x
 
 ################################################################################
 # PLATFORM LDFLAGS
