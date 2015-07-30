@@ -1,11 +1,12 @@
 #pragma once
 
+#include <string>         // for string
+#include "ofBaseTypes.h"  // for ofPixels
 #include "ofConstants.h"
-#include "ofRectangle.h"
-#include "ofPixels.h"
-#include "ofTexture.h"
-class ofMesh;
-class ofRectangle;
+#include "ofRectangle.h"  // for ofRectangle
+#include "ofTexture.h"    // for ofTexture
+class ofMesh;             // forward-declaration
+class ofRectangle;        // forward-declaration
 
 /*
  
