@@ -1,17 +1,23 @@
 #include "ofShader.h"
-#include "ofUtils.h"
-#include "ofFileUtils.h"
-#include "ofGraphics.h"
-#include "ofGLProgrammableRenderer.h"
-#include "ofTexture.h"
-#include "ofMatrix4x4.h"
-#include "ofMatrix3x3.h"
-#include "ofVec2f.h"
-#include "ofVec3f.h"
-#include "ofVec4f.h"
-#include "ofParameterGroup.h"
-#include "ofParameter.h"
-#include <regex>
+#include <algorithm>      // for find
+#include <iomanip>        // for operator<<, setw
+#include <istream>        // for operator<<, basic_ostream, stringstream, etc
+#include <map>            // for map, _Rb_tree_iterator
+#include <memory>         // for allocator, shared_ptr, __shared_ptr
+#include <regex>          // for regex_traits, match_results<>::value_type, etc
+#include <typeinfo>       // for type_info
+#include <utility>        // for pair
+#include "ofBaseTypes.h"  // for ofBaseGLRenderer, ofBaseHasTexture
+#include "ofFileUtils.h"  // for ofBuffer, ofBuffer::Line, ofBufferFromFile, etc
+#include "ofGLUtils.h"    // for ofIsGLProgrammableRenderer, etc
+#include "ofMatrix3x3.h"  // for ofMatrix3x3
+#include "ofMatrix4x4.h"  // for ofMatrix4x4
+#include "ofParameter.h"  // for ofParameterGroup, ofAbstractParameter, etc
+#include "ofTexture.h"    // for ofTextureData, ofTexture
+#include "ofUtils.h"      // for ofToInt, ofTrim
+#include "ofVec2f.h"      // for ofVec2f
+#include "ofVec3f.h"      // for ofVec3f
+#include "ofVec4f.h"      // for ofVec4f
 
 static const string COLOR_ATTRIBUTE="color";
 static const string POSITION_ATTRIBUTE="position";
