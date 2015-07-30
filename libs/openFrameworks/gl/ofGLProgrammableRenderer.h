@@ -1,20 +1,32 @@
 #pragma once
-#include "ofBaseTypes.h"
-#include "ofPolyline.h"
-#include "ofMatrix4x4.h"
-#include "ofShader.h"
-#include "ofMatrixStack.h"
-#include "ofVboMesh.h"
-#include "of3dGraphics.h"
-#include "ofBitmapFont.h"
-#include "ofPath.h"
-
-
-class ofShapeTessellation;
-class ofMesh;
-class ofFbo;
-class ofVbo;
-class ofMaterial;
+#include <deque>             // for deque
+#include <string>            // for string
+#include "glew.h"            // for GLuint, GLenum
+#include "of3dGraphics.h"    // for of3dGraphics
+#include "of3dPrimitives.h"  // for of3dPrimitive
+#include "ofBaseTypes.h"     // for ofColor, ofBaseVideoDraws (ptr only), etc
+#include "ofBitmapFont.h"    // for ofBitmapFont
+#include "ofColor.h"         // for ofFloatColor
+#include "ofConstants.h"     // for ofFillFlag, ofHandednessType, etc
+#include "ofGLUtils.h"       // for ofPolyRenderMode
+#include "ofMatrix4x4.h"     // for ofMatrix4x4
+#include "ofMatrixStack.h"   // for ofMatrixStack
+#include "ofMesh.h"          // for ofMesh
+#include "ofPath.h"          // for ofPath
+#include "ofPolyline.h"      // for ofPolyline
+#include "ofRectangle.h"     // for ofRectangle
+#include "ofShader.h"        // for ofShader
+#include "ofTypes.h"         // for ofStyle
+#include "ofVbo.h"           // for ofVbo
+#include "ofVboMesh.h"       // for ofVboMesh
+#include "ofVec3f.h"         // for ofVec3f
+#include "ofVec4f.h"         // for ofVec4f
+class ofAppBaseWindow;       // forward declaration
+class ofCamera;              // forward declaration
+class ofFbo;                 // forward declaration
+class ofNode;                // forward declaration
+class ofTexture;             // forward declaration
+class ofTrueTypeFont;        // forward declaration
 static const int OF_NO_TEXTURE=-1;
 
 class ofGLProgrammableRenderer: public ofBaseGLRenderer{
