@@ -2,11 +2,24 @@
 
 #ifdef OF_SOUND_PLAYER_OPENAL
 
-#include "ofUtils.h"
-#include "ofMath.h"
-#include "ofFileUtils.h"
-#include "ofAppRunner.h"
-#include <set>
+#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_type
+#include <stdio.h>             // for SEEK_SET, SEEK_END
+#include <sys/types.h>         // for off_t
+#include <cmath>               // for cos, round, sqrtf, sin
+#include <mutex>               // for mutex, unique_lock
+#include <ostream>             // for operator<<, basic_ostream::operator<<, etc
+#include <set>                 // for allocator, set, etc
+#include "al.h"                // for alGetError, alSourcef, ALuint, etc
+#include "alc.h"               // for alcCloseDevice, alcCreateContext, etc
+#include "glew.h"              // for glGetError
+#include "ofAppRunner.h"       // for ofEvents
+#include "ofEvent.h"           // for ofEvent
+#include "ofEventUtils.h"      // for ofAddListener, ofRemoveListener
+#include "ofEvents.h"          // for ofCoreEvents, ofEventArgs (ptr only)
+#include "ofFileUtils.h"       // for ofFilePath
+#include "ofLog.h"             // for ofLog, ofLogError, ofLogWarning
+#include "ofMath.h"            // for ofClamp
+#include "ofUtils.h"           // for ofToDataPath
 
 ALCdevice * ofOpenALSoundPlayer::alDevice = 0;
 ALCcontext * ofOpenALSoundPlayer::alContext = 0;
