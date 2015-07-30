@@ -1,7 +1,12 @@
 #pragma once
 
-#include "ofPoint.h"
-#include "ofConstants.h"
+#include <math.h>         // for cos
+#include <vector>         // for vector
+#include "ofConstants.h"  // for PI
+#include "ofPoint.h"      // for ofPoint
+#include "ofVec2f.h"      // for ofVec2f
+#include "ofVec3f.h"      // for ofVec3f
+#include "ofVec4f.h"      // for ofVec4f
 
 // notes:
 // -----------------------------------------------------------
