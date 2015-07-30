@@ -1,9 +1,10 @@
 #pragma once
-#include "ofConstants.h"
-
-class ofBaseSoundInput;
-class ofBaseSoundOutput;
-class ofSoundBuffer;
+#include <iosfwd>  // for ostream
+#include <string>  // for string
+#include <vector>  // for vector
+class ofBaseApp;          // forward declaration
+class ofBaseSoundInput;   // forward declaration
+class ofBaseSoundOutput;  // forward declaration
 
 /// \class ofSoundDevice
 /// \brief Represents information about a sound device on the system.
