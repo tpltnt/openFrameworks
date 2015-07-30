@@ -1,22 +1,24 @@
 #pragma once
 
-
 /*
  todo: add support for attachment of multiple shaders
  if a uniform or attribute isn't available, this will cause an error
  make sure to catch and report that error.
  */
 
-#include "ofConstants.h"
-#include "ofBaseTypes.h"
-#include "ofLog.h"
-class ofTexture;
-class ofMatrix4x4;
-class ofMatrix3x3;
-class ofParameterGroup;
-class ofVec2f;
-class ofVec3f;
-class ofVec4f;
+#include <string>         // for string
+#include <unordered_map>  // for unordered_map
+#include <vector>         // for vector
+#include "glew.h"         // for GLint, GLuint, GLenum, GLsizei, etc
+#include "ofLog.h"        // for ofLogLevel
+class ofBaseHasTexture;   // forward declaration
+class ofMatrix3x3;        // forward declaration
+class ofMatrix4x4;        // forward declaration
+class ofParameterGroup;   // forward declaration
+class ofTexture;          // forward declaration
+class ofVec2f;            // forward declaration
+class ofVec3f;            // forward declaration
+class ofVec4f;            // forward declaration
 
 class ofShader {
 public:
