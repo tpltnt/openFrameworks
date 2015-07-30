@@ -1,6 +1,6 @@
 #pragma once
 
-#include <climits>                 // for UINT_MAX
+#include <climits>                 // IWYU pragma: keep; for UINT_MAX
 #include <memory>                  // for shared_ptr
 #include <string>                  // for string
 #include <vector>                  // for vector
