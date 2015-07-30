@@ -1,10 +1,13 @@
 #pragma once
 
-#include "ofConstants.h"
-
-#include "ofBaseSoundStream.h"
-#include "ofTypes.h"
-#include "ofSoundBuffer.h"
+#include <memory>               // for shared_ptr
+#include <vector>               // for vector
+#include "ofBaseSoundStream.h"  // for ofBaseSoundStream, etc
+#include "ofSoundBuffer.h"      // for ofSoundBuffer
+class RtAudio;                  // forward declaration
+class ofBaseApp;                // forward declaration
+class ofBaseSoundInput;         // forward declaration
+class ofBaseSoundOutput;        // forward declaration
 
 class RtAudio;
 typedef unsigned int RtAudioStreamStatus;
