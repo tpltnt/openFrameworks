@@ -47,10 +47,6 @@
 /// next. Storing this position means that you can easily create continuous
 /// drawings without difficulty.
 
-
-
-class ofRectangle;
-
 class ofPolyline {
 public:
 	/// \name Constructors
