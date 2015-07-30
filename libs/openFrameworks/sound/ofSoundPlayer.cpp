@@ -1,10 +1,8 @@
 #include "ofSoundPlayer.h"
-#include "ofUtils.h"
+#include <ostream>  // for operator<<
+#include "ofLog.h"  // for ofLog, ofLogWarning
 
 // these are global functions, that affect every sound / channel:
-// ------------------------------------------------------------
-// ------------------------------------------------------------
-
 //--------------------
 void ofSoundStopAll(){
 	#ifdef OF_SOUND_PLAYER_FMOD
