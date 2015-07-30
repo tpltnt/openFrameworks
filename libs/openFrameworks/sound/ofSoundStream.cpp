@@ -1,5 +1,12 @@
 #include "ofSoundStream.h"
-#include "ofAppRunner.h"
+#include <ext/alloc_traits.h>   // for __alloc_traits<>::value_type
+#include <ostream>              // for operator<<, ostream, basic_ostream, etc
+#include "ofAppRunner.h"        // for ofGetAppPtr
+#include "ofBaseSoundStream.h"  // for ofSoundDevice, ofBaseSoundStream
+#include "ofLog.h"              // for ofLog, ofLogNotice
+class ofBaseApp;                // forward declaration
+class ofBaseSoundInput;         // forward declaration
+class ofBaseSoundOutput;        // forward declaration
 
 ofSoundStream soundStreamInput;
 ofSoundStream soundStreamOutput;	
