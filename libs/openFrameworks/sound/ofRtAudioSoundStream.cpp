@@ -1,11 +1,16 @@
 #include "ofRtAudioSoundStream.h"
-#include "ofConstants.h"
+#include <string.h>       // for memset
+#include <exception>      // for exception
+#include <ostream>        // for operator<<, basic_ostream::operator<<
+#include <string>         // for operator<<, string
+#include "ofConstants.h"  // for OF_SOUNDSTREAM_RTAUDIO
+#include "ofBaseApp.h"    // for ofBaseApp
+#include "ofBaseTypes.h"  // for ofBaseSoundInput, ofBaseSoundOutput
+#include "ofLog.h"        // for ofLog, ofLogError, ofLogWarning
 
 #ifdef OF_SOUNDSTREAM_RTAUDIO
-#include "ofSoundStream.h"
-#include "ofMath.h"
-#include "ofUtils.h"
-#include "RtAudio.h"
+#include "ofMath.h"       // for ofNextPow2
+#include "RtAudio.h"      // for RtAudio, RtAudio::DeviceInfo, etc
 
 
 //------------------------------------------------------------------------------
