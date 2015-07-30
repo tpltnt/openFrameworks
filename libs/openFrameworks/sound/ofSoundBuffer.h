@@ -8,9 +8,11 @@
 #ifndef OFSOUNDBUFFER_H_
 #define OFSOUNDBUFFER_H_
 
-#include "ofConstants.h"
-
-
+#include <stdint.h>  // for uint64_t
+#include <cstddef>   // for size_t
+#include <string>    // for string, allocator
+#include <vector>    // for vector
+#include "ofConstants.h"  // IWYU pragma: keep
 /*! 
  
  @brief Buffer for audio samples and associated metadata.

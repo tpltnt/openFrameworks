@@ -6,9 +6,15 @@
  */
 
 #include "ofSoundBuffer.h"
-#include "ofSoundUtils.h"
-#include "ofLog.h"
-#include <limits>
+#include <string.h>       // for memset, memcpy
+#include <algorithm>      // for swap, max
+#include <cmath>          // for abs, sqrt, ceil, ceilf, sinf
+#include <cstdint>        // for uint64_t
+#include <limits>         // for numeric_limits
+#include <ostream>        // for size_t, operator<<
+#include "ofConstants.h"  // for TWO_PI
+#include "ofLog.h"        // for ofLog, ofLogWarning, ofLogError, etc
+#include "ofMath.h"       // for ofInterpolateHermite, ofLerp, ofRandom
 
 #if !defined(TARGET_ANDROID) && !defined(TARGET_IPHONE) && !defined(TARGET_LINUX_ARM)
 ofSoundBuffer::InterpolationAlgorithm ofSoundBuffer::defaultAlgorithm = ofSoundBuffer::Hermite;
