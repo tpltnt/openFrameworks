@@ -1,4 +1,5 @@
 #include "ofPixels.h"
+#include <algorithm>   // for swap
 #include <functional>  // for function
 #include "ofMath.h"    // for ofClamp
 

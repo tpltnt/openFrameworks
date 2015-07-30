@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string.h>       // for memcpy
-#include <algorithm>      // for swap
 #include <iterator>       // for forward_iterator_tag, iterator
 #include <limits>         // for numeric_limits
 #include <ostream>        // for operator<<
@@ -9,7 +8,7 @@
 #include "ofColor.h"      // for ofColor_
 #include "ofConstants.h"  // for ofPixelFormat, OF_DEPRECATED_MSG, etc
 #include "ofLog.h"        // for ofLog, ofLogWarning
-#include "ofUtils.h"      // for ofToStrin
+#include "ofUtils.h"      // for ofToString
 
 
 /// \file
