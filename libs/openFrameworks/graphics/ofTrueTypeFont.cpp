@@ -1,6 +1,5 @@
 #include "ofTrueTypeFont.h"
 #include <ext/alloc_traits.h>         // for __alloc_traits<>::value_type
-#include <fontconfig/fontconfig.h>    // for FcPatternDestroy, FcBool, etc
 #include <freetype.h>                 // for FT_FaceRec_, FT_GlyphSlotRec_, etc
 #include <algorithm>                  // for max, min, sort
 #include <boost/filesystem/path.hpp>  // for path
@@ -25,7 +24,7 @@
 #include "ofVec3f.h"                  // for ofVec3f
 
 #ifdef TARGET_LINUX
-#include <fontconfig/fontconfig.h>
+  #include <fontconfig/fontconfig.h>  // for FcPatternDestroy, FcBool, etc
 #endif
 
 #include FT_FREETYPE_H
@@ -33,11 +32,6 @@
 #include FT_OUTLINE_H
 #include FT_TRIGONOMETRY_H
 
-#include <algorithm>
-
-#include "ofUtils.h"
-#include "ofGraphics.h"
-#include "ofAppRunner.h"
 
 static bool printVectorInfo = false;
 static int ttfGlobalDpi = 96;
