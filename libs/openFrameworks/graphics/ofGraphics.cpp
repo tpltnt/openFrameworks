@@ -1,11 +1,10 @@
 #include "ofGraphics.h"
 #include <cmath>                   // for cos, sin
-#include <memory>                  // for shared_ptr, __shared_ptr, etc
+#include <memory>                  // for shared_ptr, __shared_ptr
 #include <ostream>                 // for operator<<
 #include "glew.h"                  // for glDepthMask, glGetBooleanv, etc
 #include "ofAppRunner.h"           // for ofGetCurrentRenderer, ofGetHeight, etc
 #include "ofBaseTypes.h"           // for ofBaseRenderer, ofPoint, ofColor, etc
-#include "ofCairoRenderer.h"       // for ofCairoRenderer, etc
 #include "ofGLUtils.h"
 #include "ofLog.h"                 // for ofLog, ofLogWarning
 #include "ofMath.h"                // for ofDist
@@ -17,7 +16,7 @@
 #include "ofVec3f.h"               // for ofVec3f
 
 #if !defined(TARGET_OF_IOS) && !defined(TARGET_ANDROID) && !defined(TARGET_EMSCRIPTEN)
-#include "ofCairoRenderer.h"
+  #include "ofCairoRenderer.h"     // for ofCairoRenderer, etc
 #endif
 
 
