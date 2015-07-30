@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vector>
-#include "ofPoint.h"
-#include "ofRectangle.h"
-#include "ofConstants.h"
-#include "ofPath.h"
-#include "ofTexture.h"
-#include "ofMesh.h"
+#include <string>         // for string
+#include <vector>         // for vector
+#include "freetype.h"     // for FT_FaceRec_
+#include "ofConstants.h"  // for OF_DEPRECATED_MSG
+#include "ofMesh.h"       // for ofMesh
+#include "ofPath.h"       // for ofPath
+#include "ofRectangle.h"  // for ofRectangle
+#include "ofTexture.h"    // for ofTexture
 
 /// \file
 /// The ofTrueTypeFont class provides an interface to load fonts into
