@@ -1,6 +1,7 @@
 #pragma once
-#include <sndfile.h>            // for SNDFILE
+
 #include <cstddef>              // for size_t
+#include <sndfile.h>            // for SNDFILE
 #include <string>               // for string
 #include <vector>               // for vector
 #include "kiss_fft.h"           // for kiss_fft_cpx
@@ -10,20 +11,19 @@ class ofEventArgs;              // forward declaration
 
 #ifdef OF_SOUND_PLAYER_OPENAL
   #include "ofBaseSoundPlayer.h"// for ofBaseSoundPlayer
-  #include "ofEvents.h"
-#include "ofThread.h"           // for ofThread
+  #include "ofThread.h"         // for ofThread
 
-#if defined (TARGET_OF_IOS) || defined (TARGET_OSX)
-  #include <OpenAL/al.h>        // for ALuint
-  #include <OpenAL/alc.h>       // for ALCcontext, ALCdevice
-#else
-  #include <AL/al.h>            // for ALuint
-  #include <AL/alc.h>           // for ALCcontext, ALCdevice
-#endif
+  #if defined (TARGET_OF_IOS) || defined (TARGET_OSX)
+    #include <OpenAL/al.h>        // for ALuint
+    #include <OpenAL/alc.h>       // for ALCcontext, ALCdevice
+  #else
+    #include <AL/al.h>            // for ALuint
+    #include <AL/alc.h>           // for ALCcontext, ALCdevice
+  #endif
 
-#ifdef OF_USING_MPG123
-  #include <mpg123.h>           // for mpg123_handle
-#endif
+  #ifdef OF_USING_MPG123
+    #include <mpg123.h>           // for mpg123_handle
+  #endif
 
 //		TO DO :
 //		---------------------------
