@@ -6,7 +6,6 @@
 #include "ofRectangle.h"  // for ofRectangle
 #include "ofTexture.h"    // for ofTexture
 class ofMesh;             // forward-declaration
-class ofRectangle;        // forward-declaration
 
 /*
  
