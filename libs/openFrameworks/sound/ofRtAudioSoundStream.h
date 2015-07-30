@@ -9,7 +9,6 @@ class ofBaseApp;                // forward declaration
 class ofBaseSoundInput;         // forward declaration
 class ofBaseSoundOutput;        // forward declaration
 
-class RtAudio;
 typedef unsigned int RtAudioStreamStatus;
 
 class ofRtAudioSoundStream : public ofBaseSoundStream{
