@@ -9,7 +9,6 @@
 #include <memory>                     // for __shared_ptr, shared_ptr
 #include <ostream>                    // for operator<<, etc
 #include "config/ftheader.h"          // for FT_FREETYPE_H, FT_GLYPH_H, etc
-#include <ft2build.h>                 // for FreeType symbols etc
 #include "ftimage.h"                  // for FT_Vector, FT_Bitmap, etc
 #include "fttypes.h"                  // for FT_Error
 #include "glew.h"                     // for GLfloat, GL_LINEAR, GL_NEAREST

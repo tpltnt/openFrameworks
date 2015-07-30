@@ -2,6 +2,7 @@
 
 #include <string>         // for string
 #include <vector>         // for vector
+#include <ft2build.h>     // for FreeType
 #include "freetype.h"     // for FT_FaceRec_
 #include "ofConstants.h"  // for OF_DEPRECATED_MSG
 #include "ofMesh.h"       // for ofMesh
