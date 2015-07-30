@@ -10,11 +10,13 @@
 
 #pragma once
 
-#include "ofVec3f.h"
-#include "ofVec4f.h"
-#include "ofQuaternion.h"
-#include "ofConstants.h"
-#include <cmath>
+#include <cmath>           // for isnan
+#include <iomanip>         // for operator<<, setw
+#include <ostream>         // for istream, basic_ostream, operator<<, etc
+#include "ofConstants.h"   // for RAD_TO_DEG
+#include "ofQuaternion.h"  // for ofQuaternion
+#include "ofVec3f.h"       // for ofVec3f
+#include "ofVec4f.h"       // for ofVec4f
 
 /// \brief The ofMatrix4x4 is the big class of the math part of openFrameworks.
 /// 
