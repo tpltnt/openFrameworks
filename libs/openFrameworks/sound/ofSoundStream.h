@@ -1,14 +1,18 @@
 #pragma once
 
-#include "ofConstants.h"
-#include "ofBaseTypes.h"
-#include "ofBaseApp.h"
-#include "ofTypes.h"
-#include "ofBaseSoundStream.h"
-#include <climits>
+#include <climits>                 // for UINT_MAX
+#include <memory>                  // for shared_ptr
+#include <string>                  // for string
+#include <vector>                  // for vector
+#include "ofConstants.h"           // for OF_DEPRECATED_MSG, etc
+class ofBaseApp;                   // forward declaration
+class ofBaseSoundInput;            // forward declaration
+class ofBaseSoundOutput;           // forward declaration
+class ofBaseSoundStream;           // forward declaration
+class ofSoundDevice;               // forward declaration
 
 #ifdef OF_SOUNDSTREAM_RTAUDIO
-	#include "ofRtAudioSoundStream.h"
+	#include "ofRtAudioSoundStream.h"  // for ofRtAudioSoundStream
 	#define OF_SOUND_STREAM_TYPE ofRtAudioSoundStream
 #elif defined(OF_SOUNDSTREAM_ANDROID)
 	#include "ofxAndroidSoundStream.h"
