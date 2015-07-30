@@ -1,7 +1,29 @@
 #include "ofTrueTypeFont.h"
-//--------------------------
-
-#include <ft2build.h>
+#include <ext/alloc_traits.h>         // for __alloc_traits<>::value_type
+#include <fontconfig/fontconfig.h>    // for FcPatternDestroy, FcBool, etc
+#include <freetype.h>                 // for FT_FaceRec_, FT_GlyphSlotRec_, etc
+#include <algorithm>                  // for max, min, sort
+#include <boost/filesystem/path.hpp>  // for path
+#include <cmath>                      // for floor, logf, pow
+#include <limits>                     // for numeric_limits
+#include <memory>                     // for __shared_ptr, shared_ptr
+#include <ostream>                    // for operator<<, etc
+#include "config/ftheader.h"          // for FT_FREETYPE_H, FT_GLYPH_H, etc
+#include <ft2build.h>                 // for FreeType symbols etc
+#include "ftimage.h"                  // for FT_Vector, FT_Bitmap, etc
+#include "fttypes.h"                  // for FT_Error
+#include "glew.h"                     // for GLfloat, GL_LINEAR, GL_NEAREST
+#include "ofAppRunner.h"              // for ofGetCurrentRenderer
+#include "ofBaseTypes.h"              // for ofPoint, ofPixels, etc
+#include "ofFileUtils.h"              // for ofFile, etc
+#include "ofGLUtils.h"
+#include "ofGraphics.h"               // for ofIsVFlipped, ofGetStyle
+#include "ofLog.h"                    // for ofLog, ofLogError, ofLogNotice, etc
+#include "ofPixels.h"                 // for ofPixels_
+#include "ofTypes.h"                  // for ofStyle
+#include "ofUtils.h"                  // for ofUTF8Iterator, ofToDataPath
+#include "ofVec2f.h"                  // for ofVec2f
+#include "ofVec3f.h"                  // for ofVec3f
 
 #ifdef TARGET_LINUX
 #include <fontconfig/fontconfig.h>
