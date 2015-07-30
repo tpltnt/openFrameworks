@@ -5,7 +5,6 @@
 #include <string>              // for operator<<
 #include "ofAppRunner.h"       // for ofGetCurrentRenderer
 #include "ofLog.h"             // for ofLog, ofLogWarning
-#include "ofPoint.h"           // for ofPoint
 #include "ofRectangle.h"       // for ofRectangle
 #include "ofTessellator.h"     // for ofTessellator
 class ofMesh;                  // forward declaration
