@@ -1,25 +1,28 @@
 #pragma once
-
-#include "ofConstants.h"
+#include <sndfile.h>            // for SNDFILE
+#include <cstddef>              // for size_t
+#include <string>               // for string
+#include <vector>               // for vector
+#include "kiss_fft.h"           // for kiss_fft_cpx
+#include "kiss_fftr.h"          // for kiss_fftr_cfg, kiss_fftr_state
+#include "ofConstants.h"        // for OF_SOUND_PLAYER_OPENAL
+class ofEventArgs;              // forward declaration
 
 #ifdef OF_SOUND_PLAYER_OPENAL
-#include "ofBaseSoundPlayer.h"
-#include "ofEvents.h"
-#include "ofThread.h"
+  #include "ofBaseSoundPlayer.h"// for ofBaseSoundPlayer
+  #include "ofEvents.h"
+#include "ofThread.h"           // for ofThread
 
 #if defined (TARGET_OF_IOS) || defined (TARGET_OSX)
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
+  #include <OpenAL/al.h>        // for ALuint
+  #include <OpenAL/alc.h>       // for ALCcontext, ALCdevice
 #else
-#include <AL/al.h>
-#include <AL/alc.h>
+  #include <AL/al.h>            // for ALuint
+  #include <AL/alc.h>           // for ALCcontext, ALCdevice
 #endif
 
-#include "kiss_fft.h"
-#include "kiss_fftr.h"
-#include <sndfile.h>
 #ifdef OF_USING_MPG123
-	#include <mpg123.h>
+  #include <mpg123.h>           // for mpg123_handle
 #endif
 
 //		TO DO :
