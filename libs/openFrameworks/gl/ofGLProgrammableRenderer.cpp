@@ -1,18 +1,25 @@
 #include "ofGLProgrammableRenderer.h"
-#include "ofMesh.h"
-#include "ofPath.h"
-#include "ofMesh.h"
-#include "ofBitmapFont.h"
-#include "ofGLUtils.h"
-#include "ofImage.h"
-#include "ofFbo.h"
-#include "ofVbo.h"
-#include "of3dPrimitives.h"
-#include "ofLight.h"
-#include "ofMaterial.h"
-#include "ofCamera.h"
-#include "ofTrueTypeFont.h"
-#include "ofNode.h"
+#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_type
+#include <math.h>              // for tanf
+#include <ostream>             // for operator<<, basic_ostream::operator<<
+#include <vector>              // for vector
+#include "of3dPrimitives.h"    // for of3dPrimitive
+#include "ofBitmapFont.h"      // for ofBitmapFont
+#include "ofBufferObject.h"    // for ofBufferObject
+#include "ofCamera.h"          // for ofCamera
+#include "ofFbo.h"             // for ofFbo
+#include "ofGLUtils.h"         // for ofPolyRenderMode::OF_MESH_FILL, etc
+#include "ofImage.h"           // for ofFloatImage, ofImage, ofShortImage
+#include "ofLog.h"             // for ofLog, ofLogWarning, ofLogError
+#include "ofMesh.h"            // for ofMesh
+#include "ofNode.h"            // for ofNode
+#include "ofPath.h"            // for ofPath, ofPath::Mode::POLYLINES
+#include "ofPixels.h"          // for ofPixels_
+#include "ofTexture.h"         // for ofTexture, ofTextureData, etc
+#include "ofTrueTypeFont.h"    // for ofTrueTypeFont
+#include "ofUtils.h"           // for ofStringReplace, ofToString
+#include "ofVbo.h"             // for ofVbo
+class ofAppBaseWindow;         // forward declaration
 
 
 static const string VIEW_MATRIX_UNIFORM="viewMatrix";
