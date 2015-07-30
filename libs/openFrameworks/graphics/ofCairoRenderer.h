@@ -1,16 +1,29 @@
 #pragma once
 
-
-#include "cairo-features.h"
-#include "cairo-pdf.h"
-#include "cairo-svg.h"
-#include "cairo.h"
-#include <deque>
-#include <stack>
-#include "ofMatrix4x4.h"
-#include "ofBaseTypes.h"
-#include "ofPath.h"
-#include "of3dGraphics.h"
+#include <deque>             // for deque
+#include <stack>             // for stack
+#include <string>            // for string
+#include <vector>            // for vector
+#include "cairo.h"           // for cairo_surface_t, cairo_t, _cairo_status, etc
+#include "cairo-pdf.h"       // for cairo_pdf_surface_create_for_stream
+#include "cairo-svg.h"       // for cairo_svg_surface_create_for_stream
+#include "of3dGraphics.h"    // for of3dGraphics
+#include "of3dPrimitives.h"  // for of3dPrimitive
+#include "ofBaseTypes.h"     // for ofPoint, ofColor, ofPixels, etc
+#include "ofConstants.h"     // for ofMatrixMode, ofFillFlag, etc
+#include "ofFileUtils.h"     // for ofBuffer
+#include "ofGLUtils.h"       // for ofPolyRenderMode, ofPrimitiveMode
+#include "ofMatrix4x4.h"     // for ofMatrix4x4
+#include "ofPath.h"          // for ofPath, ofPath::Command
+#include "ofPixels.h"        // for ofPixels_
+#include "ofPolyline.h"      // for ofPolyline
+#include "ofRectangle.h"     // for ofRectangle
+#include "ofTypes.h"         // for ofStyle
+#include "ofVec3f.h"         // for ofVec3f
+class ofCamera;              // forward declaration
+class ofMesh;                // forward declaration
+class ofNode;                // forward declaration
+class ofTrueTypeFont;        // forward declaration
 
 class ofCairoRenderer: public ofBaseRenderer{
 public:
