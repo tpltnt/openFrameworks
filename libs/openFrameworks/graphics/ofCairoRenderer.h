@@ -5,8 +5,6 @@
 #include <string>            // for string
 #include <vector>            // for vector
 #include "cairo.h"           // for cairo_surface_t, cairo_t, _cairo_status, etc
-#include "cairo-pdf.h"       // for cairo_pdf_surface_create_for_stream
-#include "cairo-svg.h"       // for cairo_svg_surface_create_for_stream
 #include "of3dGraphics.h"    // for of3dGraphics
 #include "of3dPrimitives.h"  // for of3dPrimitive
 #include "ofBaseTypes.h"     // for ofPoint, ofColor, ofPixels, etc

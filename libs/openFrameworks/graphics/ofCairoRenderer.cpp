@@ -2,6 +2,8 @@
 #include <ext/alloc_traits.h>  // for __alloc_traits<>::value_type
 #include <math.h>              // for tanf
 #include <ostream>             // for operator<<, basic_ostream::operator<<, etc
+#include "cairo-pdf.h"         // for cairo_pdf_surface_create, etc
+#include "cairo-svg.h"         // for cairo_svg_surface_create, etc
 #include "cairo-version.h"     // for CAIRO_VERSION_MAJOR, etc
 #include "of3dPrimitives.h"    // for of3dPrimitive
 #include "ofAppRunner.h"       // for ofGetOrientation
@@ -13,7 +15,7 @@
 #include "ofMesh.h"            // for ofMesh
 #include "ofNode.h"            // for ofNode
 #include "ofTrueTypeFont.h"    // for ofTrueTypeFont
-#include "ofUtils.h"           // for ofToLower, ofSplitString
+#include "ofUtils.h"           // for ofToDataPath, ofToLower, etc
 
 const string ofCairoRenderer::TYPE="cairo";
 
