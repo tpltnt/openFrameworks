@@ -1,11 +1,6 @@
-
-
-
-
 #include "ofMatrix4x4.h"
-#include <limits>
-#include <stdlib.h>
-#include "ofConstants.h"
+#include <limits>         // for numeric_limits
+#include "ofConstants.h"  // for DEG_TO_RAD, RAD_TO_DEG
 
 #if (_MSC_VER)
 #undef min
