@@ -1,13 +1,10 @@
 #pragma once
 
-#include "ofConstants.h"
-
-
-#include "ofBaseSoundPlayer.h"
-
+#include <string>               // for string
+#include "ofBaseSoundPlayer.h"  // for ofBaseSoundPlayer
 
 extern "C" {
-#include "fmod.h"
+#include "fmod.h"               // for FMOD_CHANNEL, FMOD_RESULT, etc
 #include "fmod_errors.h"
 }
 
