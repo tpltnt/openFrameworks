@@ -1,8 +1,14 @@
 #include "ofImage.h"
-#include "ofAppRunner.h"
-#include "ofTypes.h"
-#include "ofGraphics.h"
-#include "FreeImage.h"
+#include <stdint.h>           // for uint32_t
+#include <string.h>           // for memcpy
+#include <exception>          // for exception
+#include <memory>             // for shared_ptr, __shared_ptr
+#include "FreeImage.h"        // for FreeImage_Unload, etc
+#include "Poco/URI.h"         // for URI
+#include "ofAppRunner.h"      // for ofGetCurrentRenderer
+#include "ofLog.h"            // for ofLog, ofLogError, ofLogWarning
+#include "ofURLFileLoader.h"  // for ofLoadURL, ofHttpResponse
+#include "ofUtils.h"          // for ofToDataPath
 
 #ifndef TARGET_EMSCRIPTEN
 	#include "ofURLFileLoader.h"
