@@ -4,6 +4,7 @@
 #include "ofTexture.h"
 #include "ofBaseTypes.h"
 #include "ofPixels.h"
+#include "ofPlatformVideo.h"
 
 #ifdef OF_VIDEO_CAPTURE_DIRECTSHOW
 	#include "videoInput.h"

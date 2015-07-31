@@ -3,6 +3,7 @@
 #include "ofConstants.h"
 #include "ofBaseTypes.h"
 #include "ofPixels.h"
+#include "ofPlatformVideo.h"
 
 #ifdef OF_VIDEO_PLAYER_QUICKTIME
 	#include "ofQtUtils.h"

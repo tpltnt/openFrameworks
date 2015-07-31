@@ -5,6 +5,7 @@
 #include "ofMatrix4x4.h"
 #include "ofURLFileLoader.h"
 #include "ofMesh.h"
+#include "ofPlatformVideo.h"
 
 class ofAbstractParameter;
 

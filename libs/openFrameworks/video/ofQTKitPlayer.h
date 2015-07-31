@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "ofPLatformVideo.h"
+
 #ifdef OF_VIDEO_PLAYER_QTKIT
 
 #include "ofMain.h"

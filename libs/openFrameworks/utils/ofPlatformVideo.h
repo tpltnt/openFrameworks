@@ -6,6 +6,7 @@
 #pragma once
 #include "ofPlatformOS.h"
 
+
 enum ofLoopType{
 	OF_LOOP_NONE=0x01,
 	OF_LOOP_PALINDROME=0x02,

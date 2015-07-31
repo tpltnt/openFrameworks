@@ -9,13 +9,6 @@
 #define OF_VERSION_PRE_RELEASE "master"
 
 //-------------------------------
-
-enum ofLoopType{
-	OF_LOOP_NONE=0x01,
-	OF_LOOP_PALINDROME=0x02,
-	OF_LOOP_NORMAL=0x03
-};
-
 #include "tesselator.h"
 typedef TESSindex ofIndexType;
 

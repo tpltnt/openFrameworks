@@ -11,6 +11,7 @@
 #include "ofPixels.h"
 #include "ofTexture.h"
 #include "ofThread.h"
+#include "ofPlatformVideo.h"
 
 #ifdef __OBJC__
 #import "ofAVFoundationVideoPlayer.h"

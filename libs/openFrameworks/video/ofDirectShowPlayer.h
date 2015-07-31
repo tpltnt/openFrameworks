@@ -4,6 +4,7 @@
 
 #pragma once 
 #include "ofMain.h"
+#include "ofPlatformVideo.h"
 
 class DirectShowVideo; 
 

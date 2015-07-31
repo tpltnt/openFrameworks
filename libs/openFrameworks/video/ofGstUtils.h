@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofConstants.h"
+#include "ofPlatformVideo.h"
+
 #ifndef TARGET_ANDROID
 #include "ofBaseTypes.h"
 #include "ofPixels.h"

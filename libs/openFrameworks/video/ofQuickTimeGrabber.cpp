@@ -1,5 +1,6 @@
 #include "ofQuickTimeGrabber.h"
 #include "ofUtils.h"
+#include "ofPlatformVideo.h"
 
 
 #if !defined(TARGET_LINUX) && !defined(MAC_OS_X_VERSION_10_7)

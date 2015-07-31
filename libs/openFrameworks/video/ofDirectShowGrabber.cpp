@@ -1,5 +1,7 @@
 #include "ofDirectShowGrabber.h"
 #include "ofUtils.h"
+#include "ofPlatformVideo.h"
+
 #ifdef TARGET_WIN32
 //--------------------------------------------------------------------
 ofDirectShowGrabber::ofDirectShowGrabber(){

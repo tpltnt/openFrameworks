@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofGstUtils.h"
-
+#include "ofPlatformVideo.h"
 
 class ofGstVideoPlayer: public ofBaseVideoPlayer, public ofGstAppSink{
 public:

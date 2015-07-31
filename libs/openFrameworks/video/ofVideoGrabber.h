@@ -6,6 +6,7 @@
 #include "ofBaseTypes.h"
 #include "ofPixels.h"
 #include "ofTypes.h"
+#include "ofPlatformVideo.h"
 
 
 #ifdef OF_VIDEO_CAPTURE_IOS
