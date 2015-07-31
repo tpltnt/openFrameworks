@@ -1,7 +1,9 @@
 #pragma once
 
-#include "ofMesh.h"
-#include "ofVbo.h"
+#include <cstddef>      // for size_t
+#include "ofGLUtils.h"  // for ofPolyRenderMode
+#include "ofMesh.h"     // for ofMesh
+#include "ofVbo.h"      // for ofVbo
 
 class ofVboMesh: public ofMesh{
 public:
