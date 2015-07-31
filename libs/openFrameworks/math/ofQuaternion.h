@@ -9,18 +9,16 @@
  */
 
 #pragma once
-#include "ofConstants.h"
-#include "ofVec3f.h"
-#include "ofVec4f.h"
-#include <cmath>
+#include <cmath>      // for sqrt
+#include <ostream>    // for istream, operator<<, ostream, basic_ostream, etc
+#include "ofVec3f.h"  // for ofVec3f
+#include "ofVec4f.h"  // for ofVec4f
+class ofMatrix4x4;    // forward declaration
 
 #if (_MSC_VER)       
 // make microsoft visual studio complain less about double / float conversion.
 #pragma warning(disable : 4244)
 #endif
-
-
-class ofMatrix4x4;
 
 
 class ofQuaternion {
