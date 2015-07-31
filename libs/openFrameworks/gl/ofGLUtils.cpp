@@ -9,7 +9,7 @@
 #include "ofLog.h"                     // for ofLog, ofLogError
 #include "ofRendererCollection.h"      // for ofRendererCollection, etc
 #include "ofUtils.h"                   // for ofToString, ofSplitString"
-#include "ofPlatforms.h"               // for TARGET_LINUX
+#include "ofPlatformOS.h"              // for TARGET_LINUX
 
 //---------------------------------
 int ofGetGlInternalFormat(const ofPixels& pix) {

@@ -1,7 +1,7 @@
 #include "ofFmodSoundPlayer.h"
 #include <cmath>          // for log10
 #include <ostream>        // for operator<<, basic_ostream::operator<<
-#include "ofPlatforms.h"  // for TARGET_LINUX
+#include "ofPlatformOS.h" // for TARGET_LINUX
 #include "ofLog.h"        // for ofLog, ofLogWarning, ofLogError
 #include "ofMath.h"       // for ofClamp, ofNextPow2
 #include "ofUtils.h"      // for ofToDataPa

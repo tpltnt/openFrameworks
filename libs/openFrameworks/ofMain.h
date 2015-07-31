@@ -4,7 +4,7 @@
 // utils
 #include "ofConstants.h"
 #include "ofDeprecation.h"
-#include "ofPlatforms.h"
+#include "ofPlatformOS.h"
 #include "ofFileUtils.h"
 #include "ofLog.h"
 #include "ofSystemUtils.h"

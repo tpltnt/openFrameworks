@@ -2,11 +2,11 @@
 
 #include "ofBaseApp.h"
 #include "ofAppBaseWindow.h"
-#include "ofPlatforms.h"
+#include "ofPlatformOS.h"
 
 #ifndef TARGET_NO_SOUND
-#include "ofSoundPlayer.h"
-#include "ofSoundStream.h"
+	#include "ofSoundPlayer.h"
+	#include "ofSoundStream.h"
 #endif
 
 #include "ofImage.h"
@@ -27,7 +27,7 @@
 #endif
 
 #if defined (TARGET_WIN32)
-#include <mmsystem.h>
+	#include <mmsystem.h>
 #endif
 
 

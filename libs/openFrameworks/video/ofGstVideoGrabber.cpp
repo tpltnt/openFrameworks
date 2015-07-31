@@ -7,7 +7,7 @@
 
 #include "ofGstVideoGrabber.h"
 #include "ofPixels.h"
-#include "ofPlatforms.h"             // for TARGET_LINUX
+#include "ofPlatformOS.h"            // for TARGET_LINUX
 
 #include <gst/video/video.h>
 

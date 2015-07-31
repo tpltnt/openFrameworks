@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ofPlatforms.h"
+#include "ofPlatformOS.h"
 #include "utf8.h"
 #include <bitset> // For ofToBinary.
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include "ofPlatforms.h"
+#include "ofPlatformOS.h"
 
 //-------------------------------
 #define OF_VERSION_MAJOR 0

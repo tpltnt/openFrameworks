@@ -14,7 +14,7 @@
 #include "ofLog.h"             // for ofLog, ofLogError, ofLogWarning, etc
 #include "ofMesh.h"            // for ofMesh
 #include "ofNode.h"            // for ofNode
-#include "ofPlatforms.h"       // for TARGET_LITTLE_ENDIAN
+#include "ofPlatformOS.h"      // for TARGET_LITTLE_ENDIAN
 #include "ofTrueTypeFont.h"    // for ofTrueTypeFont
 #include "ofUtils.h"           // for ofToDataPath, ofToLower, etc
 

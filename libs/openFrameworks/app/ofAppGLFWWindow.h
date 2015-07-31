@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofConstants.h"
-#include "ofPlatforms.h"   // for TARGET_OSX etc
+#include "ofPlatformOS.h"  // for TARGET_OSX etc
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
