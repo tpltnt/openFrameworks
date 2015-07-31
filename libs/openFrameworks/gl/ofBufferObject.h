@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ofConstants.h"
 #include "ofTypes.h"
 #include "ofPixels.h"
 

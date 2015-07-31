@@ -11,10 +11,9 @@
 #include <cstddef>           // for size_t
 #include "of3dPrimitives.h"  // for of3dPrimitive, ofBoxPrimitive, etc
 #include "ofBaseTypes.h"     // for ofPoint, ofBaseRenderer (ptr only)
-#include "ofConstants.h"     // for OF_DEPRECATED_MSG
 #include "ofVec2f.h"         // for ofVec2f
 #include "ofVec3f.h"         // for ofVec3f
-#include "ofDeprecation.h"   // for deprecation warning
+#include "ofDeprecation.h"   // for OF_DEPRECATED_MSG
 
 
 // Grid Plane - drawn from the center //

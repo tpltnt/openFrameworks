@@ -6,6 +6,7 @@
 #include "FreeImage.h"        // for FreeImage_Unload, etc
 #include "ofAppRunner.h"      // for ofGetCurrentRenderer
 #include "ofLog.h"            // for ofLog, ofLogError, ofLogWarning
+#include "ofPlatforms.h"      // for TARGET_LITTLE_ENDIAN
 #include "ofUtils.h"          // for ofToDataPath
 
 #ifndef TARGET_EMSCRIPTEN

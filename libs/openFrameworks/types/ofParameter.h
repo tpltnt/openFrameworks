@@ -1,9 +1,7 @@
 #pragma once
 
-#include "ofEvents.h"
-#include "ofTypes.h"
+#include "ofAppRunner.h"
 #include "ofUtils.h"
-#include "ofConstants.h"
 #include <map>
 
 template<typename ParameterType>

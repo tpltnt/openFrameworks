@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ofConstants.h"
 #include "ofFileUtils.h"
 #include "ofTypes.h"
 

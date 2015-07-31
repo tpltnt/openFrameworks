@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ofConstants.h"
 #include "ofAppBaseWindow.h"
 #include "ofBaseApp.h"
 #include "ofEvents.h"

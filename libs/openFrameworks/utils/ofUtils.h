@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ofConstants.h"
+#include "ofPlatforms.h"
 #include "utf8.h"
 #include <bitset> // For ofToBinary.
 

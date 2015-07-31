@@ -1,9 +1,7 @@
 #include "ofMaterial.h"
-#include "ofConstants.h"
 #include "ofGLUtils.h"
 #include "ofLight.h"
 #include "ofGLProgrammableRenderer.h"
-#include "ofAppRunner.h"
 
 ofShader ofMaterial::shaderNoTexture;
 ofShader ofMaterial::shaderTexture2D;

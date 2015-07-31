@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ofConstants.h"
 #include "ofTypes.h"
 #include "ofDeprecation.h"
+#include "ofPlatforms.h"    // for TARGET_LINUX
 
 #if defined( TARGET_OSX ) || defined( TARGET_LINUX ) || defined (TARGET_ANDROID)
 	#include <termios.h>

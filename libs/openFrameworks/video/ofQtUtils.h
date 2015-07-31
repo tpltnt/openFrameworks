@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofConstants.h"
+#include "ofPlatforms.h"
 
 #if defined (TARGET_WIN32) || defined (TARGET_OSX)
 

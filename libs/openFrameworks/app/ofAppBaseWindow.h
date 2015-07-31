@@ -4,8 +4,10 @@
 #include "ofTypes.h"
 #include "ofEvents.h"
 #include "ofWindowSettings.h"
+#include "ofPlatforms.h"   // for TARGET_OSX etc
+
 #if defined(TARGET_LINUX) && !defined(TARGET_RASPBERRY_PI)
-#include <X11/Xlib.h>
+  #include <X11/Xlib.h>
 #endif
 
 class ofBaseApp;

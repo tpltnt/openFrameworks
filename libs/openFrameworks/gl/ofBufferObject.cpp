@@ -1,6 +1,4 @@
 #include "ofBufferObject.h"
-#include "ofConstants.h"
-#include "ofAppRunner.h"
 
 ofBufferObject::Data::Data()
 :id(0)

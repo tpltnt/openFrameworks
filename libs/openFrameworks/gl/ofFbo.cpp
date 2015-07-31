@@ -1,4 +1,3 @@
-#include "ofConstants.h"
 #include "ofFbo.h"
 #include "ofAppRunner.h"
 #include "ofUtils.h"

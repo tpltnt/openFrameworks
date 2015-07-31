@@ -2,6 +2,7 @@
 
 #include "ofBaseApp.h"
 #include "ofAppBaseWindow.h"
+#include "ofPlatforms.h"
 
 #ifndef TARGET_NO_SOUND
 #include "ofSoundPlayer.h"

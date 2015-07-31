@@ -18,6 +18,7 @@
 #include "ofGraphics.h"               // for ofIsVFlipped, ofGetStyle
 #include "ofLog.h"                    // for ofLog, ofLogError, ofLogNotice, etc
 #include "ofPixels.h"                 // for ofPixels_
+#include "ofPlatforms.h"              // for TARGET_LINUX
 #include "ofTypes.h"                  // for ofStyle
 #include "ofUtils.h"                  // for ofUTF8Iterator, ofToDataPath
 #include "ofVec2f.h"                  // for ofVec2f
