@@ -199,3 +199,89 @@ enum ofTargetPlatform{
 #ifndef __MWERKS__
   #include <cstdlib>
 #endif
+
+
+//--------------------------------------------
+//
+// 	Keyboard definitions
+//
+// 	ok -- why this?
+// 	glut key commands have some annoying features,
+// 	in that some normal keys have the same value as special keys,
+// 	but we want ONE key routine, so we need to redefine several,
+// 	so that we get some normalacy across keys routines
+//
+// 	(everything that comes through "glutSpecialKeyFunc" will get 256 added to it,
+// 	to avoid conflicts, before, values like "left, right up down" (ie, 104, 105, 106) were conflicting with
+// 	letters.. now they will be 256 + 104, 256 + 105....)
+
+#define OF_KEY_MODIFIER 	0x0100
+#define OF_KEY_RETURN		13
+#define OF_KEY_ESC			27
+#define OF_KEY_TAB          9
+#define OF_KEY_COMMAND      OF_KEY_SUPER
+
+// http://www.openframeworks.cc/forum/viewtopic.php?t=494
+// some issues with keys across platforms:
+
+#ifdef TARGET_OSX
+  #define OF_KEY_BACKSPACE	127
+  #define OF_KEY_DEL			8
+#else
+  #define OF_KEY_BACKSPACE	8
+  #define OF_KEY_DEL			127
+#endif
+
+// zach - there are more of these keys, we can add them here...
+// these are keys that are not coming through "special keys"
+// via glut, but just other keys on your keyboard like
+
+#define OF_KEY_F1			(1 | OF_KEY_MODIFIER)
+#define OF_KEY_F2			(2 | OF_KEY_MODIFIER)
+#define OF_KEY_F3			(3 | OF_KEY_MODIFIER)
+#define OF_KEY_F4			(4 | OF_KEY_MODIFIER)
+#define OF_KEY_F5			(5 | OF_KEY_MODIFIER)
+#define OF_KEY_F6			(6 | OF_KEY_MODIFIER)
+#define OF_KEY_F7			(7 | OF_KEY_MODIFIER)
+#define OF_KEY_F8			(8 | OF_KEY_MODIFIER)
+#define OF_KEY_F9			(9 | OF_KEY_MODIFIER)
+#define OF_KEY_F10			(10 | OF_KEY_MODIFIER)
+#define OF_KEY_F11			(11 | OF_KEY_MODIFIER)
+#define OF_KEY_F12			(12 | OF_KEY_MODIFIER)
+#define OF_KEY_LEFT			(100 | OF_KEY_MODIFIER)
+#define OF_KEY_UP			(101 | OF_KEY_MODIFIER)
+#define OF_KEY_RIGHT		(102 | OF_KEY_MODIFIER)
+#define OF_KEY_DOWN			(103 | OF_KEY_MODIFIER)
+#define OF_KEY_PAGE_UP		(104 | OF_KEY_MODIFIER)
+#define OF_KEY_PAGE_DOWN	(105 | OF_KEY_MODIFIER)
+#define OF_KEY_HOME			(106 | OF_KEY_MODIFIER)
+#define OF_KEY_END			(107 | OF_KEY_MODIFIER)
+#define OF_KEY_INSERT		(108 | OF_KEY_MODIFIER)
+#define OF_KEY_CONTROL		(0x200 | OF_KEY_MODIFIER)
+#define OF_KEY_ALT			(0x400 | OF_KEY_MODIFIER)
+#define OF_KEY_SHIFT		(0x800 | OF_KEY_MODIFIER)
+#define OF_KEY_SUPER		(0x1000 | OF_KEY_MODIFIER)
+#define OF_KEY_LEFT_SHIFT	(0x1 | OF_KEY_SHIFT)
+#define OF_KEY_RIGHT_SHIFT	(0x2 | OF_KEY_SHIFT)
+#define OF_KEY_LEFT_CONTROL	(0x1 | OF_KEY_CONTROL)
+#define OF_KEY_RIGHT_CONTROL (0x2 | OF_KEY_CONTROL)
+#define OF_KEY_LEFT_ALT		(0x1 | OF_KEY_ALT)
+#define OF_KEY_RIGHT_ALT	(0x2 | OF_KEY_ALT)
+#define OF_KEY_LEFT_SUPER	(0x1 | OF_KEY_SUPER)
+#define OF_KEY_RIGHT_SUPER	(0x2 | OF_KEY_SUPER)
+#define OF_KEY_LEFT_COMMAND OF_KEY_LEFT_SUPER
+#define OF_KEY_RIGHT_COMMAND OF_KEY_RIGHT_SUPER
+// not sure what to do in the case of non-glut apps....
+
+#define OF_MOUSE_BUTTON_1      0
+#define OF_MOUSE_BUTTON_2      1
+#define OF_MOUSE_BUTTON_3      2
+#define OF_MOUSE_BUTTON_4      3
+#define OF_MOUSE_BUTTON_5      4
+#define OF_MOUSE_BUTTON_6      5
+#define OF_MOUSE_BUTTON_7      6
+#define OF_MOUSE_BUTTON_8      7
+#define OF_MOUSE_BUTTON_LAST   OF_MOUSE_BUTTON_8
+#define OF_MOUSE_BUTTON_LEFT   OF_MOUSE_BUTTON_1
+#define OF_MOUSE_BUTTON_MIDDLE OF_MOUSE_BUTTON_2
+#define OF_MOUSE_BUTTON_RIGHT  OF_MOUSE_BUTTON_3
