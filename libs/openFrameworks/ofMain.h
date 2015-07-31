@@ -3,14 +3,16 @@
 //--------------------------
 // utils
 #include "ofConstants.h"
+#include "ofDeprecation.h"
+#include "ofPlatforms.h"
 #include "ofFileUtils.h"
 #include "ofLog.h"
 #include "ofSystemUtils.h"
 #include "ofURLFileLoader.h"
 #include "ofUtils.h"
 #if !defined(TARGET_EMSCRIPTEN)
-#include "ofThread.h"
-#include "ofThreadChannel.h"
+  #include "ofThread.h"
+  #include "ofThreadChannel.h"
 #endif
 #include "ofFpsCounter.h"
 
@@ -22,7 +24,7 @@
 #include "ofPoint.h"
 #include "ofRectangle.h"
 #if !defined(TARGET_EMSCRIPTEN)
-#include "ofXml.h"
+  #include "ofXml.h"
 #endif
 #include "ofParameter.h"
 #include "ofParameterGroup.h"
