@@ -1,5 +1,7 @@
 /*
-  This file handles platform specific information and includes.
+  This file handles platform (OS) specific information and includes.
+  It also handles keyboard & mouse button codes and colored console
+  logging.
 */
 
 #pragma once
@@ -285,3 +287,31 @@ enum ofTargetPlatform{
 #define OF_MOUSE_BUTTON_LEFT   OF_MOUSE_BUTTON_1
 #define OF_MOUSE_BUTTON_MIDDLE OF_MOUSE_BUTTON_2
 #define OF_MOUSE_BUTTON_RIGHT  OF_MOUSE_BUTTON_3
+
+//--------------------------------------------
+//console colors for our logger - shame this doesn't work with the xcode console
+#ifdef TARGET_WIN32
+
+	#define OF_CONSOLE_COLOR_RESTORE (0 | (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE) )
+	#define OF_CONSOLE_COLOR_BLACK (0)
+	#define OF_CONSOLE_COLOR_RED (FOREGROUND_RED)
+	#define OF_CONSOLE_COLOR_GREEN (FOREGROUND_GREEN)
+	#define OF_CONSOLE_COLOR_YELLOW (FOREGROUND_RED|FOREGROUND_GREEN)
+	#define OF_CONSOLE_COLOR_BLUE (FOREGROUND_BLUE)
+	#define OF_CONSOLE_COLOR_PURPLE (FOREGROUND_RED | FOREGROUND_BLUE )
+	#define OF_CONSOLE_COLOR_CYAN (FOREGROUND_GREEN | FOREGROUND_BLUE)
+	#define OF_CONSOLE_COLOR_WHITE (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE)
+
+#else
+
+	#define OF_CONSOLE_COLOR_RESTORE (0)
+	#define OF_CONSOLE_COLOR_BLACK (30)
+	#define OF_CONSOLE_COLOR_RED (31)
+	#define OF_CONSOLE_COLOR_GREEN (32)
+	#define OF_CONSOLE_COLOR_YELLOW (33)
+	#define OF_CONSOLE_COLOR_BLUE (34)
+	#define OF_CONSOLE_COLOR_PURPLE (35)
+	#define OF_CONSOLE_COLOR_CYAN (36)
+	#define OF_CONSOLE_COLOR_WHITE (37)
+
+#endif
