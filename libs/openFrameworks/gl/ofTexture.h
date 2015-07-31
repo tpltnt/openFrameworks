@@ -1,10 +1,14 @@
 #pragma once
 
-#include "ofPoint.h"
-#include "ofRectangle.h"
-#include "ofBaseTypes.h"
-#include "ofConstants.h"
-#include "ofVboMesh.h"
+#include <memory>         // for shared_ptr
+#include "glew.h"         // for GLint, GL_CLAMP_TO_EDGE, GL_LINEAR, etc
+#include "ofBaseTypes.h"  // for ofPoint, ofFloatPixels, ofPixels, etc
+#include "ofConstants.h"  // for OF_DEPRECATED_MSG, ofRectMode
+#include "ofMatrix4x4.h"  // for ofMatrix4x4
+#include "ofMesh.h"       // for ofMesh
+#include "ofVec3f.h"      // for ofVec3f
+class ofBufferObject;     // forward declaration
+class ofTexture;          // forward declaration
 
 /// \file
 /// ofTexture is used to create OpenGL textures that live on your graphics card
