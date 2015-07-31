@@ -4,7 +4,7 @@
 #include <memory>                  // for shared_ptr
 #include <string>                  // for string
 #include <vector>                  // for vector
-#include "ofConstants.h"           // for sth.
+#include "ofPlatformSound.h"       // for OF_SOUNDSTREAM_RTAUDIO
 #include "ofDeprecation.h"         // for OF_DEPRECATED_MSG
 class ofBaseApp;                   // forward declaration
 class ofBaseSoundInput;            // forward declaration

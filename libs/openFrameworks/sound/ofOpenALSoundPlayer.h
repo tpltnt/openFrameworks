@@ -6,7 +6,8 @@
 #include <vector>               // for vector
 #include "kiss_fft.h"           // for kiss_fft_cpx
 #include "kiss_fftr.h"          // for kiss_fftr_cfg, kiss_fftr_state
-#include "ofConstants.h"        // for OF_SOUND_PLAYER_OPENAL
+#include "ofPlatformSound.h"    // for OF_SOUND_PLAYER_OPENAL
+
 class ofEventArgs;              // forward declaration
 
 #ifdef OF_SOUND_PLAYER_OPENAL
