@@ -1,8 +1,10 @@
 #pragma once
 
-class ofVec2f;
-class ofVec3f;
-#include "ofConstants.h"
+#include <cmath>          // for sqrt, fabs
+#include <ostream>        // for istream, operator<<, ostream, etc
+#include "ofConstants.h"  // for OF_DEPRECATED_MSG
+class ofVec2f;            // forward declaration
+class ofVec3f;            // forward declaration
 
 class ofVec4f {
 public:
