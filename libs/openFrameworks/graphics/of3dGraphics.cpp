@@ -9,9 +9,10 @@
 #include "of3dGraphics.h"
 #include <math.h>         // for cos, sin
 #include <memory>         // for __shared_ptr, shared_ptr
-#include <ostream>        // for size_t, basic_ostream::operator<<
+#include <ostream>        // for basic_ostream::operator<<
 #include "ofAppRunner.h"  // for ofGetCurrentRenderer
 #include "ofColor.h"      // for ofFloatColor, ofColor_
+#include "ofConstants.h"  // for TWO_PI, ofDrawBitmapMode, etc
 #include "ofGLUtils.h"
 #include "ofMatrix4x4.h"  // for ofMatrix4x4
 #include "ofMesh.h"       // for ofMesh

@@ -24,8 +24,6 @@
     #define CALLBACK
 #endif
 
-
-//style stuff - new in 006
 static ofVboMesh gradientMesh;
 
 void ofSetCurrentRenderer(shared_ptr<ofBaseRenderer> renderer,bool setDefaults){
@@ -37,10 +35,9 @@ void ofSetCurrentRenderer(shared_ptr<ofBaseRenderer> renderer,bool setDefaults){
 	ofGetCurrentRenderer() = renderer;
 }
 
+
 #if !defined(TARGET_ANDROID) && !defined(TARGET_OF_IOS)
 
-//-----------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------
 #include "ofCairoRenderer.h"
 #include "ofGLRenderer.h"
 
