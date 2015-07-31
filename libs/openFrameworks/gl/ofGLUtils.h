@@ -8,14 +8,17 @@
 #ifndef OFGLUTILS_H_
 #define OFGLUTILS_H_
 
-#include "ofConstants.h"
-#include "ofTypes.h"
-#include "ofPixels.h"
+#include <memory>         // for shared_ptr
+#include <string>         // for string
+#include "glew.h"         // for GLuint, GLenum, etc
+#include "ofConstants.h"  // for ofPixelFormat, ofImageType
+#include "ofPixels.h"     // for ofFloatPixels, ofPixels, ofShortPixels, etc
+#include "ofTypes.h"      // IWYU pragma: keep
+class ofBaseGLRenderer;   // forward declaration
+class ofShader;           // forward declaration
+class ofGLProgrammableRenderer;  // forward declaration
 
-class ofShader;
-class ofGLProgrammableRenderer;
-class ofBaseGLRenderer;
-class ofTexture;
+
 
 enum ofPrimitiveMode{
 	OF_PRIMITIVE_TRIANGLES,
