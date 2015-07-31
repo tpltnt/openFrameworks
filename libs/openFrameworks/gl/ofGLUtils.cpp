@@ -1,11 +1,14 @@
 #include "ofGLUtils.h"
-
-#include <set>
-#include "ofGLProgrammableRenderer.h"
-#include "ofGraphics.h"
-#include "ofShader.h"
-#include "ofBaseTypes.h"
-#include "ofRendererCollection.h"
+#include <ostream>                     // for operator<<, etc
+#include <set>                         // for set, _Rb_tree_const_iterator
+#include <vector>                      // for vector
+#include "ofAppRunner.h"               // for ofGetCurrentRenderer
+#include "ofBaseTypes.h"               // for ofPixels, ofBaseRenderer, etc
+#include "ofGLProgrammableRenderer.h"  // for ofGLProgrammableRenderer, etc
+#include "ofGLRenderer.h"              // for ofGLRenderer, etc
+#include "ofLog.h"                     // for ofLog, ofLogError
+#include "ofRendererCollection.h"      // for ofRendererCollection, etc
+#include "ofUtils.h"                   // for ofToString, ofSplitString"
 
 //---------------------------------
 int ofGetGlInternalFormat(const ofPixels& pix) {
