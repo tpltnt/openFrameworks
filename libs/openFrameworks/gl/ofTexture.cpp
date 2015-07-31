@@ -1,10 +1,17 @@
 #include "ofTexture.h"
-#include "ofUtils.h"		// for nextPow2()
-#include "ofAppRunner.h"	// for getWidth()
-#include "ofGraphics.h"
-#include "ofPixels.h"
-#include "ofGLUtils.h"
-#include <map>
+#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_type
+#include <algorithm>           // for swap
+#include <map>                 // for map, allocator, _Rb_tree_iterator
+#include <ostream>             // for operator<<, basic_ostream::operator<<, etc
+#include <string>              // for operator<<
+#include <vector>              // for vector
+#include "ofBufferObject.h"    // for ofBufferObject
+#include "ofGLUtils.h"         // for ofSetPixelStoreiAlignment, etc
+#include "ofGraphics.h"        // for ofGetViewportHeight
+#include "ofLog.h"             // for ofLog, ofLogError, ofLogWarning
+#include "ofMath.h"            // for ofNextPow2
+#include "ofPixels.h"          // for ofPixels_
+#include "ofVec2f.h"           // for ofVec2
 
 //----------------------------------------------------------
 // static
