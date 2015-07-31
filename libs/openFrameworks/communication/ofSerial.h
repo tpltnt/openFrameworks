@@ -2,6 +2,7 @@
 
 #include "ofConstants.h"
 #include "ofTypes.h"
+#include "ofDeprecation.h"
 
 #if defined( TARGET_OSX ) || defined( TARGET_LINUX ) || defined (TARGET_ANDROID)
 	#include <termios.h>

@@ -8,6 +8,7 @@
 #include "ofPoint.h"      // for ofPoint
 #include "ofRectangle.h"  // for ofRectangle
 #include "ofTypes.h"      // for ofStyle
+#include "ofDeprecation.h"   // for deprecation warning
 
 /// \cond INTERNAL
 #define  	CIRC_RESOLUTION		    22

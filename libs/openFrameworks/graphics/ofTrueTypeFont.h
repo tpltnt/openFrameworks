@@ -3,7 +3,7 @@
 #include <ft2build.h>     // IWYU pragma: keep; for FreeType
 #include <string>         // for string
 #include <vector>         // for vector
-#include "ofConstants.h"  // for OF_DEPRECATED_MSG
+#include "ofDeprecation.h"// for OF_DEPRECATED_MSG
 #include "ofMesh.h"       // for ofMesh
 #include "ofPath.h"       // for ofPath
 #include "ofRectangle.h"  // for ofRectangle

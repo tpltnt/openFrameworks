@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofConstants.h"
+#include "ofDeprecation.h"        // for OF_DEPRECATED_MSG
+
 #if _MSC_VER
 //#define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>

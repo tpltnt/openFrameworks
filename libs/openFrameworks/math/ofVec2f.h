@@ -2,7 +2,8 @@
 
 #include <cmath>          // for cos, sin, sqrt, fabs, atan2
 #include <ostream>        // for istream, ostream, operator<<, etc
-#include "ofConstants.h"  // for OF_DEPRECATED_MSG, DEG_TO_RAD, RAD_TO_DEG
+#include "ofConstants.h"  // for DEG_TO_RAD, RAD_TO_DEG
+#include "ofDeprecation.h"// for OF_DEPRECATED_MSG
 class ofVec3f;            // forward declaration
 class ofVec4f;            // forward declaration
 

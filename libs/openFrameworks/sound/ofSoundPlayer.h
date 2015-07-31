@@ -3,7 +3,8 @@
 #include <memory>                 // for shared_ptr
 #include <string>                 // for string
 #include "ofBaseSoundPlayer.h"    // for ofBaseSoundPlayer
-#include "ofConstants.h"          // for OF_DEPRECATED_MSG, etc
+#include "ofConstants.h"          // for sth.
+#include "ofDeprecation.h"        // for OF_DEPRECATED_MSG
 #include "ofOpenALSoundPlayer.h"  // for ofOpenALSoundPlayer
 
 /// \todo: FIX THIS!!!!!!

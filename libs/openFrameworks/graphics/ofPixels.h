@@ -6,7 +6,8 @@
 #include <ostream>        // for operator<<
 #include <string>         // for operator<<
 #include "ofColor.h"      // for ofColor_
-#include "ofConstants.h"  // for ofPixelFormat, OF_DEPRECATED_MSG, etc
+#include "ofConstants.h"  // for ofPixelFormat, etc
+#include "ofDeprecation.h"   // for OF_DEPRECATED_MSG
 #include "ofLog.h"        // for ofLog, ofLogWarning
 #include "ofUtils.h"      // for ofToString
 

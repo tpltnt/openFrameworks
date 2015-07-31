@@ -2,6 +2,7 @@
 #include "ofEvents.h"
 #include "ofFileUtils.h"
 #include "ofTypes.h"
+#include "ofDeprecation.h"  // for deprecation warning
 
 class ofHttpRequest{
 public:

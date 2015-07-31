@@ -3,6 +3,7 @@
 #include "ofVec2f.h"
 #include "ofVec4f.h"
 #include "ofConstants.h"
+#include "ofDeprecation.h"   // for OF_DEPRECATED_MSG
 
 #include <cmath>
 #include <iostream>

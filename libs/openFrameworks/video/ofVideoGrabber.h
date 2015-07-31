@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofConstants.h"
+#include "ofDeprecation.h"        // for OF_DEPRECATED_MSG
 #include "ofTexture.h"
 #include "ofBaseTypes.h"
 #include "ofPixels.h"

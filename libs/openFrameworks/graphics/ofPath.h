@@ -3,7 +3,8 @@
 #include <vector>         // for vector
 #include "ofBaseTypes.h"  // for ofPoint, ofColor
 #include "ofColor.h"      // for ofColor_
-#include "ofConstants.h"  // for ofPolyWindingMode, OF_DEPRECATED_MSG, etc
+#include "ofConstants.h"  // for ofPolyWindingMode etc
+#include "ofDeprecation.h"   // for OF_DEPRECATED_MSG
 #include "ofPolyline.h"   // for ofPolyline
 #include "ofVboMesh.h"    // for ofVboMesh
 #include "ofVec3f.h"      // for ofVec3f

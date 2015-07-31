@@ -1,5 +1,5 @@
 #pragma once
-#include "ofConstants.h"
+#include "ofDeprecation.h"        // for OF_DEPRECATED_MSG
 #ifndef TARGET_NO_THREADS
 
 #include "Poco/AtomicCounter.h"

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "ofBaseTypes.h"
+#include "ofDeprecation.h"        // for OF_DEPRECATED_MSG
 #include "ofPixels.h"
 #include "ofTexture.h"
 #include "ofThread.h"

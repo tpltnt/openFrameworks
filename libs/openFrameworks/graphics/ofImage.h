@@ -4,12 +4,13 @@
 #include <string>         // for operator<<, string
 #include "ofBaseTypes.h"  // for ofFloatPixels, ofPixels, ofShortPixels, etc
 #include "ofColor.h"      // for ofColor_
-#include "ofConstants.h"  // for OF_DEPRECATED_MSG, ofImageType
+#include "ofConstants.h"  // for ofImageType
 #include "ofFileUtils.h"  // for ofBuffer, ofFile (ptr only)
 #include "ofGLUtils.h"    // for ofGetGlInternalFormat, etc
 #include "ofMath.h"       // for ofClamp
 #include "ofPixels.h"     // for ofPixels_
 #include "ofTexture.h"    // for ofTexture, ofTexCompression
+#include "ofDeprecation.h"   // for deprecation warning
 
 /// \file
 /// ofImage is used for loading, saving and drawing images in openFrameworks.

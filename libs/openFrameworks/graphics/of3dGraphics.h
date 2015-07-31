@@ -14,6 +14,7 @@
 #include "ofConstants.h"     // for OF_DEPRECATED_MSG
 #include "ofVec2f.h"         // for ofVec2f
 #include "ofVec3f.h"         // for ofVec3f
+#include "ofDeprecation.h"   // for deprecation warning
 
 
 // Grid Plane - drawn from the center //

@@ -2,6 +2,7 @@
 
 #include "ofTexture.h"
 #include <stack>
+#include "ofDeprecation.h"
 
 class ofFbo : public ofBaseDraws, public ofBaseHasTexture {
 public:

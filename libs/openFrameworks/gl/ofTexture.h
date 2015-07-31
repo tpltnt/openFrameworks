@@ -7,6 +7,7 @@
 #include "ofMatrix4x4.h"  // for ofMatrix4x4
 #include "ofMesh.h"       // for ofMesh
 #include "ofVec3f.h"      // for ofVec3f
+#include "ofDeprecation.h" // for deprecation warning
 class ofBufferObject;     // forward declaration
 class ofTexture;          // forward declaration
 
