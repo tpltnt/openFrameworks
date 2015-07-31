@@ -22,78 +22,6 @@ typedef TESSindex ofIndexType;
 #define OF_EXIT_APP(val)		std::exit(val);
 
 
-//------------------------------------------------ capture
-// check if any video capture system is already defined from the compiler
-#if !defined(OF_VIDEO_CAPTURE_GSTREAMER) && !defined(OF_VIDEO_CAPTURE_QUICKTIME) && !defined(OF_VIDEO_CAPTURE_DIRECTSHOW) && !defined(OF_VIDEO_CAPTURE_ANDROID) && !defined(OF_VIDEO_CAPTURE_IOS)
-	#ifdef TARGET_LINUX
-
-		#define OF_VIDEO_CAPTURE_GSTREAMER
-
-	#elif defined(TARGET_OSX)
-		//on 10.6 and below we can use the old grabber
-		#ifndef MAC_OS_X_VERSION_10_7
-			#define OF_VIDEO_CAPTURE_QUICKTIME
-		#else
-			#define OF_VIDEO_CAPTURE_QTKIT
-        #endif
-
-	#elif defined (TARGET_WIN32)
-
-		// comment out this following line, if you'd like to use the
-		// quicktime capture interface on windows
-		// if not, we default to videoInput library for
-		// direct show capture...
-
-		#define OF_SWITCH_TO_DSHOW_FOR_WIN_VIDCAP
-
-		#ifdef OF_SWITCH_TO_DSHOW_FOR_WIN_VIDCAP
-			#define OF_VIDEO_CAPTURE_DIRECTSHOW
-		#else
-			#define OF_VIDEO_CAPTURE_QUICKTIME
-		#endif
-
-	#elif defined(TARGET_ANDROID)
-
-		#define OF_VIDEO_CAPTURE_ANDROID
-
-	#elif defined(TARGET_EMSCRIPTEN)
-
-		#define OF_VIDEO_CAPTURE_EMSCRIPTEN
-
-	#elif defined(TARGET_OF_IOS)
-
-		#define OF_VIDEO_CAPTURE_IOS
-
-	#endif
-#endif
-
-//------------------------------------------------  video player
-// check if any video player system is already defined from the compiler
-#if !defined(OF_VIDEO_PLAYER_GSTREAMER) && !defined(OF_VIDEO_PLAYER_IOS) && !defined(OF_VIDEO_PLAYER_DIRECTSHOW) && !defined(OF_VIDEO_PLAYER_QUICKTIME) && !defined(OF_VIDEO_PLAYER_AVFOUNDATION) && !defined(OF_VIDEO_PLAYER_EMSCRIPTEN)
-    #ifdef TARGET_LINUX
-        #define OF_VIDEO_PLAYER_GSTREAMER
-    #elif defined(TARGET_ANDROID)
-        #define OF_VIDEO_PLAYER_ANDROID
-    #elif defined(TARGET_OF_IOS)
-        #define OF_VIDEO_PLAYER_IOS
-	#elif defined(TARGET_WIN32) && !defined(__MINGW32__)
-        #define OF_VIDEO_PLAYER_DIRECTSHOW
-    #elif defined(TARGET_OSX)
-        //for 10.8 and 10.9 users we use AVFoundation, for 10.7 we use QTKit, for 10.6 users we use QuickTime
-        #ifndef MAC_OS_X_VERSION_10_7
-            #define OF_VIDEO_PLAYER_QUICKTIME
-        #elif !defined(MAC_OS_X_VERSION_10_8)
-            #define OF_VIDEO_PLAYER_QTKIT
-        #else
-            #define OF_VIDEO_PLAYER_AVFOUNDATION
-        #endif
-    #elif defined(TARGET_EMSCRIPTEN)
-        #define OF_VIDEO_PLAYER_EMSCRIPTEN
-    #else
-        #define OF_VIDEO_PLAYER_QUICKTIME
-    #endif
-#endif
-
 //------------------------------------------------ soundstream
 // check if any soundstream api is defined from the compiler
 #if !defined(OF_SOUNDSTREAM_RTAUDIO) && !defined(OF_SOUNDSTREAM_ANDROID) && !defined(OF_SOUNDSTREAM_IOS) && !defined(OF_SOUNDSTREAM_EMSCRIPTEN)
@@ -215,6 +143,7 @@ using namespace std;
 	#define ABS(x) (((x) < 0) ? -(x) : (x))
 #endif
 
+//--- OpenGL render options
 enum ofFillFlag{
 	OF_OUTLINE=	0,
 	OF_FILLED = 1,
@@ -226,12 +155,14 @@ enum ofWindowMode{
  	OF_GAME_MODE	= 2
 };
 
+// only used in ofRectangle
 enum ofAspectRatioMode {
     OF_ASPECT_RATIO_IGNORE            = 0,
     OF_ASPECT_RATIO_KEEP              = 1,
     OF_ASPECT_RATIO_KEEP_BY_EXPANDING = 2,
 };
 
+// only used in ofRectangle
 enum ofAlignVert {
     OF_ALIGN_VERT_IGNORE   = 0x0000,
     OF_ALIGN_VERT_TOP      = 0x0010,
@@ -239,6 +170,7 @@ enum ofAlignVert {
     OF_ALIGN_VERT_CENTER   = 0x0040,
 };
 
+// only used in ofRectangle
 enum ofAlignHorz {
     OF_ALIGN_HORZ_IGNORE   = 0x0000,
     OF_ALIGN_HORZ_LEFT     = 0x0001,
@@ -251,6 +183,7 @@ enum ofRectMode{
  	OF_RECTMODE_CENTER=1
 };
 
+// only used in ofRectangle
 enum ofScaleMode{
     // ofScaleMode can usually be interpreted as a concise combination of
     // an ofAspectRatioMode, an ofAlignVert and an ofAlignHorz.
