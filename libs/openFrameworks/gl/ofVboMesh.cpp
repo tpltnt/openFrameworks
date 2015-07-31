@@ -1,8 +1,10 @@
 #include "ofVboMesh.h"
-#include "ofBaseTypes.h"
+#include <memory>         // for __shared_ptr
+#include "glew.h"         // for GL_STATIC_DRAW
+#include "ofBaseTypes.h"  // for ofBaseGLRenderer
 
 #ifdef TARGET_ANDROID
-#include "ofxAndroidUtils.h"
+  #include "ofxAndroidUtils.h"
 #endif
 
 ofVboMesh::ofVboMesh(){
