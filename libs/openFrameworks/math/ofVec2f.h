@@ -289,7 +289,7 @@ class ofVec2f {
 		/// \param vec The vector to compare alignment with
 		/// \param tolerance an angle tolerance/threshold (specified in radians) for deciding if the vectors are sufficiently aligned.
 		/// \sa align()
-		bool alignRad(const ofVec2f & vec, float tolerance = 0.0001) const;
+		OF_DEPRECATED_MSG("use isAlignedRad() instead", bool alignRad(const ofVec2f & vec, float tolerance = 0.0001) const);
 
 		/// \}
 
