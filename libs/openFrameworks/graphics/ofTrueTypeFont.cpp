@@ -13,6 +13,7 @@
 #include "glew.h"                     // for GLfloat, GL_LINEAR, GL_NEAREST
 #include "ofAppRunner.h"              // for ofGetCurrentRenderer
 #include "ofBaseTypes.h"              // for ofPoint, ofPixels, etc
+#include "ofConstants.h"
 #include "ofFileUtils.h"              // for ofFile, etc
 #include "ofGLUtils.h"
 #include "ofGraphics.h"               // for ofIsVFlipped, ofGetStyle
@@ -28,10 +29,6 @@
   #include <fontconfig/fontconfig.h>  // for FcPatternDestroy, FcBool, etc
 #endif
 
-#include FT_FREETYPE_H
-#include FT_GLYPH_H
-#include FT_OUTLINE_H
-#include FT_TRIGONOMETRY_H
 
 
 static bool printVectorInfo = false;
