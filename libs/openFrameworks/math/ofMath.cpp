@@ -1,13 +1,17 @@
 #include "ofMath.h"
-#include "ofUtils.h"
-#include "float.h"
+#include <stdlib.h>      // for rand, RAND_MAX, srand
+#include <unistd.h>      // for getpid
+#include <algorithm>     // for max, swap
+#include <cmath>         // for sqrt, floor
+#include <limits>        // for numeric_limits
+#include "ofUtils.h"     // IWYU pragma: keep
+#include "ofNoise.h"     // for _slang_library_noise1, etc
+#include "ofPolyline.h"  // for ofPolylin
 
 #ifndef TARGET_WIN32
-	#include <sys/time.h>
+	#include <sys/time.h>    // for timeval, gettimeofday
 #endif
 
-#include "ofNoise.h"
-#include "ofPolyline.h"
 
 //--------------------------------------------------
 int ofNextPow2(int a){
