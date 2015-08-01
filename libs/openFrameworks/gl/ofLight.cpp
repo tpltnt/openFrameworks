@@ -9,10 +9,16 @@
 
 
 #include "ofLight.h"
-#include "ofConstants.h"
-#include "ofLog.h"
-#include "ofUtils.h"
-#include <map>
+#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_type
+#include <math.h>              // for cos, sin
+#include <ostream>             // for operator<<, basic_ostream::operator<<, etc
+#include <string>              // for operator<<
+#include "of3dUtils.h"         // for ofDrawAxis
+#include "ofBaseTypes.h"       // for ofBaseGLRenderer, ofBaseRenderer, etc
+#include "ofConstants.h"       // for CLAMP, DEG_TO_RAD
+#include "ofGLUtils.h"         // for ofGetGLRenderer, etc
+#include "ofLog.h"             // for ofLog, ofLogWarning, ofLogError
+#include "ofMatrix4x4.h"       // for ofMatrix4x4
 
 static ofFloatColor globalAmbient(0.2, 0.2, 0.2, 1.0);
 

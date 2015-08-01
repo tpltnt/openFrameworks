@@ -11,11 +11,19 @@
 
 
 #pragma once
-
+/*
 #include "ofNode.h"
 #include "ofColor.h"
 #include "of3dGraphics.h"
 #include "ofTypes.h"
+*/
+#include <memory>     // for shared_ptr, weak_ptr
+#include <vector>     // for vector
+#include "ofColor.h"  // for ofFloatColor
+#include "ofNode.h"   // for ofNode
+#include "ofVec3f.h"  // for ofVec3f
+#include "ofVec4f.h"  // for ofVec4f
+class ofBaseRenderer; // forward declaration
 
 enum ofLightType {
 	OF_LIGHT_POINT=0,
