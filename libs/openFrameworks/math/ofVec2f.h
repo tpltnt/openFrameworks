@@ -1,8 +1,10 @@
 #pragma once
 
-class ofVec3f;
-class ofVec4f;
-#include "ofConstants.h"
+#include <cmath>          // for cos, sin, sqrt, fabs, atan2
+#include <ostream>        // for istream, ostream, operator<<, etc
+#include "ofConstants.h"  // for OF_DEPRECATED_MSG, DEG_TO_RAD, RAD_TO_DEG
+class ofVec3f;            // for conversion
+class ofVec4f;            // for conversion
 
 /// \brief
 /// ofVec2f is a class for storing a two dimensional vector.
