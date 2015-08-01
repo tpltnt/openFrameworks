@@ -4,14 +4,20 @@
 // index updating/deleting?
 // setVertexData with float* should know about ofVec3f vs ofVec2f?
 
-
-#include "ofUtils.h"
 #include "ofVbo.h"
-#include "ofShader.h"
-#include "ofGLProgrammableRenderer.h"
-
-#include <map>
-#include <set>
+#include <map>            // for map, _Rb_tree_iterator, map<>::mapped_type, etc
+#include <memory>         // for __shared_ptr
+#include <ostream>        // for operator<<, basic_ostream::operator<<
+#include <string>         // for operator<<
+#include <utility>        // for pair
+#include <vector>         // for vector
+#include "ofBaseTypes.h"  // for ofBaseGLRenderer
+#include "ofGLUtils.h"    // for ofIsGLProgrammableRenderer, etc
+#include "ofLog.h"        // for ofLog, ofLogWarning
+#include "ofMesh.h"       // for ofMesh
+#include "ofShader.h"     // for ofShader, etc
+#include "ofVec2f.h"      // for ofVec2f
+#include "ofVec3f.h"      // for ofVec3f
 
 bool ofVbo::vaoSupported=true;
 bool ofVbo::vaoChecked=false;

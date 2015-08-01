@@ -1,14 +1,14 @@
 //TODO: Add edge flags?
 
 #pragma once
-#include "ofConstants.h"
-#include "ofVec3f.h"
-#include "ofColor.h"
-#include "ofUtils.h"
-#include "ofMesh.h"
-#include "ofGLUtils.h"
-#include "ofBufferObject.h"
-#include <map>
+#include <map>               // for map
+#include "glew.h"            // for GLuint, GLsizeiptr, GLenum, GLintptr, etc
+#include "ofBufferObject.h"  // for ofBufferObject
+#include "ofColor.h"         // for ofFloatColor
+#include "ofConstants.h"     // for ofIndexType
+class ofMesh;                // forward declaration
+class ofVec2f;               // forward declaration
+class ofVec3f;               // forward declaration
 
 class ofVbo {
 public:
