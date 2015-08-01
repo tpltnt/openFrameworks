@@ -1,5 +1,6 @@
 #pragma once
 
+#include <assert.h>       // for assert
 #include <cmath>          // for cos, sin, sqrt, fabs, atan2
 #include <ostream>        // for istream, ostream, operator<<, etc
 #include "ofConstants.h"  // for OF_DEPRECATED_MSG, DEG_TO_RAD, RAD_TO_DEG
@@ -169,10 +170,12 @@ class ofVec2f {
 		/// This function can be handy if you want to do the same operation to both x and
 		/// y components, as it means you can just make a for loop that repeats twice.
 		float & operator[](size_t n){
+			assert(n<DIM);  // fail hard if index is out of bounds
 			return getPtr()[n];
 		}
 
 		float operator[](size_t n) const {
+			assert(n<DIM);  // fail hard if index is out of bounds
 			return getPtr()[n];
 		}
 
