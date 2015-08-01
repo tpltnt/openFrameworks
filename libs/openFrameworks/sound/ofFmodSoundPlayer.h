@@ -1,11 +1,10 @@
 #pragma once
 
 #include <string>               // for string
-#include "ofBaseSoundPlayer.h"  // for ofBaseSoundPlayer
+#include "ofBaseSoundPlayer.h"  // for ofBaseSoundPlayerr
 
 extern "C" {
 #include "fmod.h"               // for FMOD_CHANNEL, FMOD_RESULT, etc
-#include "fmod_errors.h"
 }
 
 //		TO DO :
