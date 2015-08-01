@@ -1,18 +1,35 @@
 #pragma once
-#include "ofBaseTypes.h"
-#include "ofPolyline.h"
-#include "ofMatrix4x4.h"
-#include <stack>
-#include "of3dGraphics.h"
-#include "ofBitmapFont.h"
-#include "ofMatrixStack.h"
-#include "ofPath.h"
-#include <set>
+#include <deque>            // for deque
+#include <set>              // for allocator, set
+#include <string>           // for string
+#include <vector>           // for vector
+#include "glew.h"           // for GLuint
+#include "of3dGraphics.h"   // for of3dGraphics
+#include "ofBaseTypes.h"    // for ofPoint, ofColor, etc
+#include "ofBitmapFont.h"   // for ofBitmapFont
+#include "ofColor.h"        // for ofFloatColor
+#include "ofConstants.h"    // for ofFillFlag, ofHandednessType, etc
+#include "ofGLUtils.h"      // for ofPolyRenderMode
+#include "ofMatrix4x4.h"    // for ofMatrix4x4
+#include "ofMatrixStack.h"  // for ofMatrixStack
+#include "ofPath.h"         // for ofPath
+#include "ofPolyline.h"     // for ofPolyline
+#include "ofRectangle.h"    // for ofRectangle
+#include "ofTypes.h"        // for ofStyle
+#include "ofVboMesh.h"      // for ofVboMesh
+#include "ofVec3f.h"        // for ofVec3f
+#include "ofVec4f.h"        // for ofVec4f
+class of3dPrimitive;        // forward declaration (line 15)
+class ofAppBaseWindow;      // forward declaration
+class ofCamera;             // forward declaration
+class ofFbo;                // forward declaration (line 14)
+class ofMesh;               // forward declaration (line 13)
+class ofNode;               // forward declaration
+class ofShader;             // forward declaration
+class ofTexture;            // forward declaration
+class ofTrueTypeFont;       // forward declaration
+class ofVbo;                // forward declaration
 
-class ofShapeTessellation;
-class ofMesh;
-class ofFbo;
-class of3dPrimitive;
 
 class ofGLRenderer: public ofBaseGLRenderer{
 public:
