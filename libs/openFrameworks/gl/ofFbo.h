@@ -1,8 +1,11 @@
 #pragma once
 
-#include "ofTexture.h"
-#include <stack>
-#include "ofDeprecation.h"
+#include <memory>           // for shared_ptr, weak_ptr, allocator
+#include <vector>           // for vector
+#include "glew.h"           // for GLenum, GLint, GLuint, GL_RGBA
+#include "ofBaseTypes.h"    // for ofBaseDraws, ofBaseGLRenderer (ptr only), etc
+#include "ofDeprecation.h"  // for OF_DEPRECATED_MSG
+#include "ofTexture.h"      // for ofTexture
 
 class ofFbo : public ofBaseDraws, public ofBaseHasTexture {
 public:

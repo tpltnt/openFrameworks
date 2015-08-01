@@ -1,15 +1,17 @@
 #include "ofFbo.h"
-#include "ofAppRunner.h"
-#include "ofUtils.h"
-#include "ofGraphics.h"
-#include "ofGLRenderer.h"
-#include <map>
+#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_type
+#include <algorithm>           // for min
+#include <map>                 // for map, allocator, _Rb_tree_iterator
+#include <ostream>             // for operator<<, basic_ostream::operator<<
+#include <string>              // for operator<<
+#include "ofGLUtils.h"         // for ofIsGLProgrammableRenderer, etc
+#include "ofLog.h"             // for ofLog, ofLogError, ofLogWarning, etc
 
 #ifdef TARGET_OPENGLES
-#include <dlfcn.h>
+	#include <dlfcn.h>
 #endif
 #ifdef TARGET_ANDROID
-#include "ofxAndroidUtils.h"
+	#include "ofxAndroidUtils.h"
 #endif
 
 
