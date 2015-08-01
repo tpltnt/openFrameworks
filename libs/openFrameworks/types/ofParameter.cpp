@@ -1,5 +1,5 @@
 #include "ofParameter.h"
-#include "ofParameterGroup.h"
+#include <typeinfo>  // for type_inf
 using namespace std;
 
 string ofAbstractParameter::getEscapedName() const{

@@ -1,16 +1,25 @@
 #pragma once
 
-#include "ofAppRunner.h"
-#include "ofUtils.h"
-#include <map>
-
-template<typename ParameterType>
-class ofParameter;
-
-template<typename ParameterType, typename Friend>
-class ofReadOnlyParameter;
-
+#include <algorithm>       // for find_if, remove_if
+#include <functional>      // for _1, bind, function
+#include <iosfwd>          // for size_t, ostream, istream
+#include <limits>          // for numeric_limits
+#include <map>             // for map
+#include <memory>          // for shared_ptr, weak_ptr, operator!=, etc
+#include <string>          // for string
+#include <vector>          // for vector, vector<>::const_iterator, etc
+#include "ofBaseTypes.h"   // for ofColor, ofPoint
+#include "ofColor.h"       // for ofColor_, ofFloatColor, ofShortColor
+#include "ofEvent.h"       // for ofEvent
+#include "ofEventUtils.h"  // for ofEventOrder::OF_EVENT_ORDER_AFTER_APP, etc
+#include "ofUtils.h"       // for ofFromString, ofToString
+#include "ofVec2f.h"       // for ofVec2f
+#include "ofVec3f.h"       // for ofVec3f
+#include "ofVec4f.h"       // for ofVec4f
 class ofParameterGroup;
+template<typename ParameterType> class ofParameter;  // lines 7-8
+template<typename ParameterType, typename Friend> class ofReadOnlyParameter;
+
 
 
 
