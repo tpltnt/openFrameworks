@@ -283,7 +283,7 @@ class ofVec2f {
 		/// \param vec The vector to compare alignment with
 		/// \param tolerance an angle tolerance/threshold (specified in degrees) for deciding if the vectors are sufficiently aligned.
 		/// \returns true if both vectors are aligned (pointing in the same direction).
-		bool align(const ofVec2f & vec, float tolerance = 0.0001) const;
+		OF_DEPRECATED_MSG("use isAligned() instead", bool align(const ofVec2f & vec, float tolerance = 0.0001) const);
 
 		/// \brief Determine if two vectors are aligned with tolerance in radians
 		/// \param vec The vector to compare alignment with
