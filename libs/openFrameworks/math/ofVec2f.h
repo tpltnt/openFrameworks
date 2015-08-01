@@ -168,11 +168,11 @@ class ofVec2f {
 		///
 		/// This function can be handy if you want to do the same operation to both x and
 		/// y components, as it means you can just make a for loop that repeats twice.
-		float & operator[](int n){
+		float & operator[](size_t n){
 			return getPtr()[n];
 		}
 
-		float operator[](int n) const {
+		float operator[](size_t n) const {
 			return getPtr()[n];
 		}
 
