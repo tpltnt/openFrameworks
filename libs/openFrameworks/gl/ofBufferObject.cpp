@@ -40,7 +40,7 @@ ofBufferObject::ofBufferObject()
 }
 
 void ofBufferObject::allocate(){
-	data = shared_ptr<Data>(new Data());
+	data = std::shared_ptr<Data>(new Data());
 }
 
 void ofBufferObject::allocate(GLsizeiptr bytes, GLenum usage){

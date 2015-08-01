@@ -1,17 +1,28 @@
 #include "ofGLRenderer.h"
-#include "ofMesh.h"
-#include "ofPath.h"
-#include "ofMesh.h"
-#include "of3dPrimitives.h"
-#include "ofBitmapFont.h"
-#include "ofGLUtils.h"
-#include "ofImage.h"
-#include "ofFbo.h"
-#include "ofLight.h"
-#include "ofMaterial.h"
-#include "ofCamera.h"
-#include "ofTrueTypeFont.h"
-#include "ofNode.h"
+#include <ext/alloc_traits.h>  // for __alloc_traits<>::value_type
+#include <math.h>              // for tanf
+#include <memory>              // for shared_ptr, __shared_ptr
+#include <ostream>             // for operator<<, basic_ostream::operator<<, etc
+#include "of3dPrimitives.h"    // for of3dPrimitive
+#include "ofBitmapFont.h"      // for ofBitmapFont
+#include "ofBufferObject.h"    // for ofBufferObject
+#include "ofCamera.h"          // for ofCamera
+#include "ofFbo.h"             // for ofFbo
+#include "ofGLUtils.h"         // for ofPolyRenderMode::OF_MESH_FILL, etc
+#include "ofImage.h"           // for ofFloatImage, ofImage, ofShortImage
+#include "ofLight.h"           // for ofLightsData, ofLight::Data, ofLight
+#include "ofLog.h"             // for ofLog, ofLogWarning, ofLogError
+#include "ofMaterial.h"        // for ofMaterial::Data, ofMaterial
+#include "ofMesh.h"            // for ofMesh
+#include "ofNode.h"            // for ofNode
+#include "ofPath.h"            // for ofPath, ofPath::Mode::POLYLINES
+#include "ofPixels.h"          // for ofPixels_
+#include "ofShader.h"          // for ofShader
+#include "ofTexture.h"         // for ofTexture, ofTextureData, etc
+#include "ofTrueTypeFont.h"    // for ofTrueTypeFont
+#include "ofVbo.h"             // for ofVbo
+#include "ofVec2f.h"           // for ofVec2f
+class ofAppBaseWindow;         // forward declaration
 
 const string ofGLRenderer::TYPE="GL";
 
