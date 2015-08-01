@@ -5,7 +5,6 @@
 #include "ofBaseSoundPlayer.h"    // for ofBaseSoundPlayer
 #include "ofDeprecation.h"        // for OF_DEPRECATED_MSG
 #include "ofPlatformSound.h"      // for OF_SOUND_PLAYER_OPENAL
-#include "ofOpenALSoundPlayer.h"  // for ofOpenALSoundPlayer
 
 /// \todo: FIX THIS!!!!!!
 /// #warning FIX THIS.
@@ -44,7 +43,7 @@ float * ofSoundGetSpectrum(int nBands);
 #endif
 
 #ifdef OF_SOUND_PLAYER_OPENAL
-  #include "ofOpenALSoundPlayer.h"
+  #include "ofOpenALSoundPlayer.h"  // for ofOpenALSoundPlayer
   #define OF_SOUND_PLAYER_TYPE ofOpenALSoundPlayer
 #endif
 
