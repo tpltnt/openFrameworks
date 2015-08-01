@@ -1,7 +1,20 @@
 #include "ofMaterial.h"
-#include "ofGLUtils.h"
-#include "ofLight.h"
-#include "ofGLProgrammableRenderer.h"
+#include <ext/alloc_traits.h>          // for __alloc_traits<>::value_type
+#include <algorithm>                   // for max
+#include <cmath>                       // for cos
+#include <memory>                      // for allocator, shared_ptr, etc
+#include <ostream>                     // for size_t, etc
+#include <vector>                      // for vector
+#include "glew.h"                      // for GL_FRAGMENT_SHADER, etc
+#include "ofGLProgrammableRenderer.h"  // for ofGLProgrammableRenderer, etc
+#include "ofGLUtils.h"                 // for ofGetGLRenderer
+#include "ofLight.h"                   // for ofLight::Data, ofLightsData, etc
+#include "ofMath.h"                    // for ofDegToRad
+#include "ofMatrix4x4.h"               // for operator*
+#include "ofShader.h"                  // for ofShader
+#include "ofUtils.h"                   // for ofToString
+#include "ofVec3f.h"                   // for ofVec3f
+#include "ofVec4f.h"                   // for ofVec4f
 
 ofShader ofMaterial::shaderNoTexture;
 ofShader ofMaterial::shaderTexture2D;

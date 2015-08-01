@@ -1,7 +1,10 @@
 #pragma once
-#include "ofColor.h"
-#include "ofShader.h"
-#include "ofBaseTypes.h"
+#include <cstddef>        // for size_t
+#include <string>         // for string
+#include "ofBaseTypes.h"  // for ofBaseMaterial
+#include "ofColor.h"      // for ofFloatColor, ofColor_
+class ofGLProgrammableRenderer;  // forward declaration
+class ofShader;           // forward declaration
 
 /**
  * Material concept: "Anything graphical applied to the polygons"
