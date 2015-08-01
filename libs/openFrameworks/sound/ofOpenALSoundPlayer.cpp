@@ -7,12 +7,13 @@
 #include <sys/types.h>         // for off_t
 #include <cmath>               // for cos, round, sqrtf, sin
 #include <mutex>               // for mutex, unique_lock
-#include <ostream>             // for operator<<, basic_ostream::operator<<, etc
-#include <set>                 // for allocator, set, etc
+#include <ostream>             // for operator<<, basic_ostream::operator<<
+#include <set>                 // for set, _Rb_tree_const_iterator, etc
 #include "al.h"                // for alGetError, alSourcef, ALuint, etc
 #include "alc.h"               // for alcCloseDevice, alcCreateContext, etc
 #include "glew.h"              // for glGetError
 #include "ofAppRunner.h"       // for ofEvents
+#include "ofConstants.h"       // for TWO_PI
 #include "ofEvent.h"           // for ofEvent
 #include "ofEventUtils.h"      // for ofAddListener, ofRemoveListener
 #include "ofEvents.h"          // for ofCoreEvents, ofEventArgs (ptr only)
