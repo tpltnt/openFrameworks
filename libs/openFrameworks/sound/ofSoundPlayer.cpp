@@ -1,6 +1,7 @@
 #include "ofSoundPlayer.h"
-#include <ostream>  // for operator<<
-#include "ofLog.h"  // for ofLog, ofLogWarning
+#include <ostream>        // for operator<<
+#include "ofConstants.h"  // for CLAMP
+#include "ofLog.h"        // for ofLog, ofLogWarningg
 
 // these are global functions, that affect every sound / channel:
 //--------------------
