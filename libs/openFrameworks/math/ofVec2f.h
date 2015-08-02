@@ -1044,13 +1044,13 @@ inline bool ofVec2f::match(const ofVec2f & vec, float tolerance) const {
 		   && (fabs(y - vec.y) < tolerance);
 }
 
-//
+
 // Checks if vectors look in the same direction.
 // Tolerance is specified in degree.
-
 inline bool ofVec2f::isAligned(const ofVec2f & vec, float tolerance) const {
 	return fabs(this->angle(vec)) < tolerance;
 }
+
 inline bool ofVec2f::align(const ofVec2f & vec, float tolerance) const {
 	return isAligned(vec, tolerance);
 }
@@ -1058,15 +1058,13 @@ inline bool ofVec2f::align(const ofVec2f & vec, float tolerance) const {
 inline bool ofVec2f::isAlignedRad(const ofVec2f & vec, float tolerance) const {
 	return fabs(this->angleRad(vec)) < tolerance;
 }
+
 inline bool ofVec2f::alignRad(const ofVec2f & vec, float tolerance) const {
 	return isAlignedRad(vec, tolerance);
 }
 
 
 // Overloading for any type to any type
-//
-//
-
 inline ofVec2f ofVec2f::operator+(const ofVec2f & vec) const {
 	return ofVec2f(x + vec.x, y + vec.y);
 }
