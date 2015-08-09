@@ -283,7 +283,7 @@ PLATFORM_LIBRARIES =
 
 ifneq ($(LINUX_ARM),1)
 	PLATFORM_LIBRARIES += glut
-	
+
 	#PLATFORM_LIBRARIES += gstgl-1.0 
 	#PLATFORM_LIBRARIES += SM 
 	#PLATFORM_LIBRARIES += ICE
@@ -297,7 +297,7 @@ ifneq ($(PLATFORM_ARCH),armv6l)
     PLATFORM_LIBRARIES += dl 
     PLATFORM_LIBRARIES += pthread
 endif
-    
+
 PLATFORM_LIBRARIES += freeimage
 PLATFORM_LIBRARIES += rtaudio
 PLATFORM_LIBRARIES += boost_filesystem
