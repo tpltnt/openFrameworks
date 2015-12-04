@@ -31,17 +31,6 @@ class ofDragInfo{
 
 class ofEventArgs{};
 
-class ofEntryEventArgs : public ofEventArgs {
-public:
-	ofEntryEventArgs()
-	:state(0){}
-
-	ofEntryEventArgs(int state)
-	:state(state){}
-
-	int state;
-};
-
 class ofKeyEventArgs : public ofEventArgs {
 public:
 	enum Type{
@@ -92,25 +81,38 @@ class ofMouseEventArgs : public ofEventArgs, public ofVec2f {
 		Moved,
 		Released,
 		Dragged,
-		Scrolled
+		Scrolled,
+		Entered,
+		Exited
 	};
 
 	ofMouseEventArgs()
 	:type(Pressed)
-	,button(OF_MOUSE_BUTTON_LEFT){}
+	,button(OF_MOUSE_BUTTON_LEFT)
+	,scrollX(0.f)
+	,scrollY(0.f)
+	{}
 
 	ofMouseEventArgs(Type type, float x, float y, int button)
 	:ofVec2f(x,y)
 	,type(type)
-	,button(button){}
+	,button(button)
+	,scrollX(0.f)
+	,scrollY(0.f)
+	{}
 
 	ofMouseEventArgs(Type type, float x, float y)
 	:ofVec2f(x,y)
 	,type(type)
-	,button(0){}
+	,button(0)
+	,scrollX(0.f)
+	,scrollY(0.f)
+	{}
 
 	Type type;
 	int button;
+	float scrollX;
+	float scrollY;
 };
 
 class ofTouchEventArgs : public ofEventArgs, public ofVec2f {
@@ -202,7 +204,6 @@ class ofCoreEvents {
 	ofEvent<ofEventArgs> 		draw;
 	ofEvent<ofEventArgs> 		exit;
 
-	ofEvent<ofEntryEventArgs>	windowEntered;
 	ofEvent<ofResizeEventArgs> 	windowResized;
 
 	ofEvent<ofKeyEventArgs> 	keyPressed;
@@ -213,6 +214,8 @@ class ofCoreEvents {
 	ofEvent<ofMouseEventArgs> 	mousePressed;
 	ofEvent<ofMouseEventArgs> 	mouseReleased;
 	ofEvent<ofMouseEventArgs> 	mouseScrolled;
+	ofEvent<ofMouseEventArgs> 	mouseEntered;
+	ofEvent<ofMouseEventArgs> 	mouseExited;
 
 	ofEvent<ofTouchEventArgs>	touchDown;
 	ofEvent<ofTouchEventArgs>	touchUp;
@@ -230,7 +233,7 @@ class ofCoreEvents {
 	float getFrameRate() const;
 	float getTargetFrameRate() const;
 	double getLastFrameTime() const;
-	int getFrameNum() const;
+	uint64_t getFrameNum() const;
 
 	bool getMousePressed(int button=-1) const;
 	bool getKeyPressed(int key=-1) const;
@@ -252,12 +255,13 @@ class ofCoreEvents {
 	void notifyMouseReleased(int x, int y, int button);
 	void notifyMouseDragged(int x, int y, int button);
 	void notifyMouseMoved(int x, int y);
-	void notifyMouseScrolled(float x, float y);
+	void notifyMouseScrolled(int x, int y, float scrollX, float scrollY);
+	void notifyMouseEntered(int x, int y);
+	void notifyMouseExited(int x, int y);
 	void notifyMouseEvent(const ofMouseEventArgs & mouseEvent);
 
 	void notifyExit();
 	void notifyWindowResized(int width, int height);
-	void notifyWindowEntry(int state);
 
 	void notifyDragEvent(ofDragInfo info);
 
@@ -286,6 +290,8 @@ void ofRegisterMouseEvents(ListenerClass * listener, int prio=OF_EVENT_ORDER_AFT
 	ofAddListener(ofEvents().mousePressed,listener,&ListenerClass::mousePressed,prio);
 	ofAddListener(ofEvents().mouseReleased,listener,&ListenerClass::mouseReleased,prio);
 	ofAddListener(ofEvents().mouseScrolled,listener,&ListenerClass::mouseScrolled,prio);
+	ofAddListener(ofEvents().mouseEntered,listener,&ListenerClass::mouseEntered,prio);
+	ofAddListener(ofEvents().mouseExited,listener,&ListenerClass::mouseExited,prio);
 }
 
 template<class ListenerClass>
@@ -320,6 +326,8 @@ void ofUnregisterMouseEvents(ListenerClass * listener, int prio=OF_EVENT_ORDER_A
 	ofRemoveListener(ofEvents().mousePressed,listener,&ListenerClass::mousePressed,prio);
 	ofRemoveListener(ofEvents().mouseReleased,listener,&ListenerClass::mouseReleased,prio);
 	ofRemoveListener(ofEvents().mouseScrolled,listener,&ListenerClass::mouseScrolled,prio);
+	ofRemoveListener(ofEvents().mouseEntered,listener,&ListenerClass::mouseEntered,prio);
+	ofRemoveListener(ofEvents().mouseExited,listener,&ListenerClass::mouseExited,prio);
 }
 
 template<class ListenerClass>

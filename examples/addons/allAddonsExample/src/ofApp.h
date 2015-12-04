@@ -5,10 +5,11 @@
 #include "ofxNetwork.h"
 #include "ofxOsc.h"
 #include "ofxXmlSettings.h"
-#include "ofx3DModelLoader.h"
 #include "ofxAssimpModelLoader.h"
 #include "ofxThreadedImageLoader.h"
-
+#include "ofxKinect.h"
+#include "ofxGui.h"
+#include "ofxSvg.h"
 class ofApp : public ofBaseApp{
 
 	public:
@@ -23,6 +24,8 @@ class ofApp : public ofBaseApp{
 		void mouseDragged(int x, int y, int button);
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
+		void mouseEntered(int x, int y);
+		void mouseExited(int x, int y);
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);		
@@ -36,7 +39,9 @@ class ofApp : public ofBaseApp{
         ofxTCPServer server;
         ofxOscSender osc_sender;
         ofxXmlSettings settings;
-        ofx3DModelLoader modelLoader;
-		ofxAssimpModelLoader betterModelLoader;
-		ofxThreadedImageLoader threadedLoader;
+	ofxAssimpModelLoader betterModelLoader;
+	ofxThreadedImageLoader threadedLoader;
+	ofxKinect kinect;
+	ofxPanel gui;
+	ofxSVG svg;
 };

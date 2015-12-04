@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
 bool compareName( const colorNameMapping& s1, const colorNameMapping& s2 ) {
-    return strcasecmp( s1.name.c_str(), s2.name.c_str() ) <= 0;
+    return s1.name < s2.name;
 }
 
 bool compareBrightness( const colorNameMapping& s1, const colorNameMapping& s2 ) {
@@ -289,6 +289,16 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseEntered(int x, int y){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseExited(int x, int y){
 
 }
 

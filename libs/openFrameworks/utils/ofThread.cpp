@@ -64,26 +64,12 @@ void ofThread::startThread(bool mutexBlocks, bool verbose){
 //-------------------------------------------------
 bool ofThread::lock(){
 	if(_mutexBlocks){
-        if(isCurrentThread()){
-            ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - ofThread waiting for its own mutex to be unlocked.";
-        }else{
-            ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - External thread waiting for ofThread mutex to be unlocked";
-        }
 		mutex.lock();
-
 	}else{
-		if(!mutex.tryLock()){
-			ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - Mutex is already locked, tryLock failed.";
-			return false;
+		if(!mutex.try_lock()){
+			return false; // mutex is locked, tryLock failed
 		}
 	}
-
-    if(isCurrentThread()){
-        ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - ofThread locked its own mutex.";
-    }else{
-        ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - External thread locked the ofThread mutex.";
-    }
-
 	return true;
 }
 
@@ -91,12 +77,6 @@ bool ofThread::lock(){
 //-------------------------------------------------
 void ofThread::unlock(){
 	mutex.unlock();
-
-    if(isCurrentThread()){
-        ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - ofThread unlocked its own mutex.";
-    } else {
-        ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - External thread unlocked the ofThread mutex.";
-    }
 }
 
 
@@ -113,25 +93,25 @@ void ofThread::waitForThread(bool callStopThread, long milliseconds){
 
 		// tell thread to stop
 		if(callStopThread){
-            stopThread();
-			ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - Signaled to stop.";
+            stopThread(); // signalled to stop
 		}
 
 		// wait for the thread to finish
-		ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - waiting to stop";
-
         if(isCurrentThread()){
-			ofLogWarning("ofThread") << "- name: " << getThreadName() << " - waitForThread should only be called from outside the this ofThread.";
-			return;
+			return; // waitForThread should only be called outside thread
 		}
 
-        if (INFINITE_JOIN_TIMEOUT == milliseconds){
-            thread.join();
-        }else{
-            // Wait for "joinWaitMillis" milliseconds for thread to finish
-            if(!thread.tryJoin(milliseconds)){
-                ofLogError("ofThread") << "- name: " << getThreadName() << " - Unable to completely waitForThread.";
+        try{
+            if (INFINITE_JOIN_TIMEOUT == milliseconds){
+                thread.join();
+            }else{
+                // Wait for "joinWaitMillis" milliseconds for thread to finish
+                if(!thread.tryJoin(milliseconds)){
+                    // unable to completely wait for thread
+                }
             }
+        }catch(...){
+            
         }
     }
 }
@@ -195,21 +175,28 @@ void ofThread::threadedFunction(){
 
 //-------------------------------------------------
 void ofThread::run(){
-	//ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - Started Thread.";
 #ifdef TARGET_ANDROID
 	JNIEnv * env;
-	jint attachResult = ofGetJavaVMPtr()->AttachCurrentThread(&env,NULL);
+	jint attachResult = ofGetJavaVMPtr()->AttachCurrentThread(&env,nullptr);
 	if(attachResult!=0){
 		ofLogWarning() << "couldn't attach new thread to java vm";
 	}
 #endif
 	// user function
     // should loop endlessly.
-	threadedFunction();
+	try{
+		threadedFunction();
+	}catch(const Poco::Exception& exc){
+		ofLogFatalError("ofThreadErrorLogger::exception") << exc.displayText();
+	}catch(const std::exception& exc){
+		ofLogFatalError("ofThreadErrorLogger::exception") << exc.what();
+	}catch(...){
+		ofLogFatalError("ofThreadErrorLogger::exception") << "Unknown exception.";
+	}
 
     _threadRunning = false;
 
-#if !defined(TARGET_WIN32) && !defined(TARGET_ANDROID)
+#if !defined(TARGET_WIN32)
 	// FIXME: this won't be needed once we update POCO https://github.com/pocoproject/poco/issues/79
 	if(!threadBeingWaitedFor){ //if threadedFunction() ended and the thread is not being waited for, detach it before exiting.
 		pthread_detach(pthread_self());
@@ -218,6 +205,4 @@ void ofThread::run(){
 #ifdef TARGET_ANDROID
 	attachResult = ofGetJavaVMPtr()->DetachCurrentThread();
 #endif
-
-	ofLogVerbose("ofThread") << "- name: " << getThreadName() << " - Thread Finished.";
 }

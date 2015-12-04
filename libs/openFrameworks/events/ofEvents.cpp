@@ -25,7 +25,7 @@ double ofGetLastFrameTime(){
 }
 
 //--------------------------------------
-int ofGetFrameNum(){
+uint64_t ofGetFrameNum(){
 	return ofEvents().getFrameNum();
 }
 
@@ -84,6 +84,8 @@ void ofCoreEvents::disable(){
 	mousePressed.disable();
 	mouseMoved.disable();
 	mouseScrolled.disable();
+	mouseEntered.disable();
+	mouseExited.disable();
 	touchDown.disable();
 	touchUp.disable();
 	touchMoved.disable();
@@ -106,6 +108,8 @@ void ofCoreEvents::enable(){
 	mousePressed.enable();
 	mouseMoved.enable();
 	mouseScrolled.enable();
+	mouseEntered.enable();
+	mouseExited.enable();
 	touchDown.enable();
 	touchUp.enable();
 	touchMoved.enable();
@@ -127,7 +131,7 @@ void ofCoreEvents::setFrameRate(int _targetRate){
 	}else{
 		bFrameRateSet	= true;
 		targetRate		= _targetRate;
-		unsigned long long nanosPerFrame = 1000000000.0 / (double)targetRate;
+		uint64_t nanosPerFrame = 1000000000.0 / (double)targetRate;
 		timer.setPeriodicEvent(nanosPerFrame);
 	}
 }
@@ -148,7 +152,7 @@ double ofCoreEvents::getLastFrameTime() const{
 }
 
 //--------------------------------------
-int ofCoreEvents::getFrameNum() const{
+uint64_t ofCoreEvents::getFrameNum() const{
 	return fps.getNumFrames();
 }
 
@@ -307,7 +311,13 @@ void ofCoreEvents::notifyMouseEvent(const ofMouseEventArgs & mouseEvent){
 			notifyMouseReleased(mouseEvent.x,mouseEvent.y,mouseEvent.button);
 			break;
 		case ofMouseEventArgs::Scrolled:
-			notifyMouseScrolled(mouseEvent.x,mouseEvent.y);
+			notifyMouseScrolled(mouseEvent.x,mouseEvent.y,mouseEvent.scrollX,mouseEvent.scrollY);
+			break;
+		case ofMouseEventArgs::Entered:
+			notifyMouseEntered(mouseEvent.x,mouseEvent.y);
+			break;
+		case ofMouseEventArgs::Exited:
+			notifyMouseExited(mouseEvent.x,mouseEvent.y);
 			break;
 	}
 }
@@ -388,13 +398,23 @@ void ofCoreEvents::notifyMouseMoved(int x, int y){
 }
 
 //------------------------------------------
-void ofCoreEvents::notifyMouseScrolled(float x, float y){
+void ofCoreEvents::notifyMouseScrolled(int x, int y, float scrollX, float scrollY){
 	ofMouseEventArgs mouseEventArgs(ofMouseEventArgs::Scrolled,x,y);
-
-	mouseEventArgs.x = x;
-	mouseEventArgs.y = y;
-	mouseEventArgs.type = ofMouseEventArgs::Scrolled;
+	mouseEventArgs.scrollX = scrollX;
+	mouseEventArgs.scrollY = scrollY;
 	ofNotifyEvent( mouseScrolled, mouseEventArgs );
+}
+
+//------------------------------------------
+void ofCoreEvents::notifyMouseEntered(int x, int y){
+	ofMouseEventArgs mouseEventArgs(ofMouseEventArgs::Entered,x,y);
+	ofNotifyEvent( mouseEntered, mouseEventArgs );
+}
+
+//------------------------------------------
+void ofCoreEvents::notifyMouseExited(int x, int y){
+	ofMouseEventArgs mouseEventArgs(ofMouseEventArgs::Exited,x,y);
+	ofNotifyEvent( mouseExited, mouseEventArgs );
 }
 
 //------------------------------------------
@@ -411,13 +431,6 @@ void ofCoreEvents::notifyWindowResized(int width, int height){
 //------------------------------------------
 void ofCoreEvents::notifyDragEvent(ofDragInfo info){
 	ofNotifyEvent(fileDragEvent, info);
-}
-
-//------------------------------------------
-void ofCoreEvents::notifyWindowEntry( int state ) {
-	ofEntryEventArgs entryArgs(state);
-	ofNotifyEvent(windowEntered, entryArgs);
-
 }
 
 //------------------------------------------

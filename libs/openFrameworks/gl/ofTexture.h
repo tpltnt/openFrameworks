@@ -159,10 +159,10 @@ public:
 	ofTextureData() {
 		textureID = 0;
 #ifndef TARGET_OPENGLES
-		glTypeInternal = GL_RGB8;
+		glInternalFormat = GL_RGB8;
 		textureTarget = GL_TEXTURE_RECTANGLE_ARB;
 #else
-		glTypeInternal = GL_RGB;
+		glInternalFormat = GL_RGB;
 		textureTarget = GL_TEXTURE_2D;
 #endif
 
@@ -185,13 +185,14 @@ public:
 		wrapModeHorizontal = GL_CLAMP_TO_EDGE;
 		wrapModeVertical = GL_CLAMP_TO_EDGE;
 		hasMipmap = false;
+		bufferId = 0;
 
 	}
 
 	unsigned int textureID; ///< GL internal texture ID.
 	int textureTarget; ///< GL texture type, either GL_TEXTURE_2D or
 	                   ///< GL_TEXTURE_RECTANGLE_ARB.
-	int glTypeInternal; ///< GL internal format, e.g. GL_RGB8.
+	int glInternalFormat; ///< GL internal format, e.g. GL_RGB8.
                         ///< \sa http://www.opengl.org/wiki/Image_Format
 	
 	float tex_t; ///< Texture horizontal coordinate, ratio of width to display width.
@@ -210,6 +211,7 @@ public:
 	GLint wrapModeHorizontal; ///< How will the texture wrap around horizontally?
 	GLint wrapModeVertical; ///< How will the texture wrap around vertically?
 	
+	unsigned int bufferId; ///< Optionally if the texture is backed by a buffer so we can bind it
 private:
 	shared_ptr<ofTexture> alphaMask; ///< Optional alpha mask to bind
 	bool bUseExternalTextureID; ///< Are we using an external texture ID? 
@@ -255,6 +257,7 @@ class ofTexture : public ofBaseDraws {
 	/// \brief Construct an ofTexture from an existing ofTexture.
 	/// \param mom The ofTexture to copy. Reuses internal GL texture ID.
 	ofTexture(const ofTexture & mom);
+    ofTexture(ofTexture && mom);
 
 	/// \brief Allocate the texture using the given settings.
 	///
@@ -297,8 +300,8 @@ class ofTexture : public ofBaseDraws {
 	/// \sa allocate(int w, int h, int glInternalFormat)
 	/// \param w Desired width in pixels.
 	/// \param h Desired height in pixels.
-	/// \param glInternalFormat
-	/// \param glFormat
+	/// \param glInternalFormat The internal openGL format.
+	/// \param glFormat The openGL format.
 	/// \param pixelType GL pixel type: GL_UNSIGNED_BYTE, GL_FLOAT, etc.
 	virtual void allocate(int w, int h, int glInternalFormat, int glFormat, int pixelType);
 	
@@ -313,7 +316,7 @@ class ofTexture : public ofBaseDraws {
 	/// \sa allocate(int w, int h, int glInternalFormat)
 	/// \param w Desired width in pixels.
 	/// \param h Desired height in pixels.
-	/// \param glInternalFormat
+	/// \param glInternalFormat The internal openGL format.
 	/// \param bUseARBExtension Set to true to use rectangular textures.
 	virtual void allocate(int w, int h, int glInternalFormat, bool bUseARBExtension);
 
@@ -383,7 +386,25 @@ class ofTexture : public ofBaseDraws {
 	/// \param pix Reference to ofFloatPixels instance.
 	/// \param bUseARBExtension Set to true to use rectangular textures.
 	virtual void allocate(const ofFloatPixels& pix, bool bUseARBExtension);
-	
+
+#ifndef TARGET_OPENGLES
+	/// \brief Allocate texture as a Buffer Texture.
+	///
+	/// Uses a GPU buffer as data for the texture instead of pixels in RAM
+	/// Allows to use texture buffer objects (TBO) which make it easier to send big
+	/// amounts of data to a shader as a uniform.
+	/// 
+	/// Buffer textures are 1D textures, and may only be sampled using texelFetch 
+	/// in GLSL.
+	///
+	/// See textureBufferInstanceExample and https://www.opengl.org/wiki/Buffer_Texture
+	///
+	/// \sa allocate(const ofBufferObject & buffer, int glInternalFormat)
+	/// \param buffer Reference to ofBufferObject instance.
+	/// \param glInternalFormat Internal pixel format of the data.
+	void allocateAsBufferTexture(const ofBufferObject & buffer, int glInternalFormat);
+#endif
+
 
 	/// \brief Determine whether the texture has been allocated.
 	///
@@ -417,6 +438,7 @@ class ofTexture : public ofBaseDraws {
 	/// \brief Copy a given ofTexture into this texture.
 	/// \param mom The ofTexture to copy from. Reuses internal GL texture ID.
 	ofTexture& operator=(const ofTexture & mom);
+    ofTexture& operator=(ofTexture && mom);
 
 
 	/// \brief Clears the texture.
@@ -445,7 +467,7 @@ class ofTexture : public ofBaseDraws {
 	/// load, i.e. we can upload GL_BGRA pixels into a GL_RGBA texture but the
 	/// number of channels need to match according to the OpenGL standard.
 	/// 
-	/// \param data Pointer to byte pixel data. Must not be NULL.
+	/// \param data Pointer to byte pixel data. Must not be nullptr.
 	/// \param w Pixel data width.
 	/// \param h Pixel data height.
 	/// \param glFormat GL pixel type: GL_RGBA, GL_LUMINANCE, etc.
@@ -453,7 +475,7 @@ class ofTexture : public ofBaseDraws {
 
 	/// \brief Load short (2 byte) pixel data.
 	/// \sa loadData(const unsigned char* const data, int w, int h, int glFormat)
-	/// \param data Pointer to byte pixel data. Must not be NULL.
+	/// \param data Pointer to byte pixel data. Must not be nullptr.
 	/// \param w Pixel data width.
 	/// \param h Pixel data height.
 	/// \param glFormat GL pixel type: GL_RGBA, GL_LUMINANCE, etc.
@@ -461,7 +483,7 @@ class ofTexture : public ofBaseDraws {
 
 	/// \brief Load float pixel data.
 	/// \sa loadData(const unsigned char* const data, int w, int h, int glFormat)
-	/// \param data Pointer to byte pixel data. Must not be NULL.
+	/// \param data Pointer to byte pixel data. Must not be nullptr.
 	/// \param w Pixel data width.
 	/// \param h Pixel data height.
 	/// \param glFormat GL pixel type: GL_RGBA, GL_LUMINANCE, etc.
@@ -513,6 +535,14 @@ class ofTexture : public ofBaseDraws {
 
 #ifndef TARGET_OPENGLES
 	/// \brief Load pixels from an ofBufferObject
+	///
+	/// This is different to allocate(ofBufferObject,internal). That
+	/// creates a texture which data lives in GL buffer while this
+	/// copies the data from the buffer to the texture.
+	///
+	/// This is usually used to upload data to be shown asynchronously
+	/// by using a buffer object binded as a PBO
+	///
 	/// \param buffer The buffer to load.
 	/// \param glFormat GL pixel type: GL_RGBA, GL_LUMINANCE, etc.
 	/// \param glType the GL type to load.
@@ -621,7 +651,6 @@ class ofTexture : public ofBaseDraws {
 	/// \param sh Subsection height within the texture.
 	void drawSubsection(float x, float y, float z, float w, float h, float sx, float sy, float sw, float sh) const;
 
-	ofMesh getMeshForSubsection(float x, float y, float z, float w, float h, float sx, float sy, float sw, float sh, bool vflipped, ofRectMode rectMode) const;
 	ofMesh getQuad(const ofPoint & p1, const ofPoint & p2, const ofPoint & p3, const ofPoint & p4) const;
 
 	/// \brief Get a mesh that has the texture coordinates set.
@@ -636,7 +665,9 @@ class ofTexture : public ofBaseDraws {
 	/// \param sy Subsection y axis offset within the texture.
 	/// \param sw Subsection width within the texture.
 	/// \param sh Subsection height within the texture.
-	ofMesh getMeshForSubsection(float x, float y, float z, float w, float h, float sx, float sy, float sw, float sh) const;
+	/// \param vflipped Takes into account the flipped state in OF.
+	/// \param rectMode rectMode Taking x,y as the center or the top left corner.
+	ofMesh getMeshForSubsection(float x, float y, float z, float w, float h, float sx, float sy, float sw, float sh, bool vflipped, ofRectMode rectMode) const;
 
 	/// \brief Bind the texture.
 	///
@@ -655,7 +686,7 @@ class ofTexture : public ofBaseDraws {
 	///
 	void unbind(int textureLocation=0) const;
 
-#ifndef TARGET_OPENGLES
+#if !defined(TARGET_OPENGLES) && defined(glBindImageTexture)
 	/// Calls glBindImageTexture on the texture
 	///
 	/// Binds the texture as an read or write image, only available since OpenGL 4.2
@@ -910,7 +941,7 @@ protected:
 	/// load, i.e. we can upload GL_BGRA pixels into a GL_RGBA texture but the
 	/// number of channels need to match according to the OpenGL standard.
 	///
-	/// \param data Pointer to byte pixel data. Must not be NULL.
+	/// \param data Pointer to byte pixel data. Must not be nullptr.
 	/// \param w Pixel data width.
 	/// \param h Pixel data height.
 	/// \param glFormat GL pixel type: GL_RGBA, GL_LUMINANCE, etc.

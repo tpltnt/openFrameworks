@@ -35,7 +35,16 @@ public:
 	void setTexCoordData(const float * texCoord0x, int total, int usage, int stride=0);
 
 	void setAttributeData(int location, const float * vert0x, int numCoords, int total, int usage, int stride=0);
-	
+
+#ifndef TARGET_OPENGLES
+	/// used to send an attribute per instance(s) instead of per vertex.
+	/// will send per vertex if set to 0 or to the number of instances if >0
+	///
+	/// see textureBufferInstancedExample
+	/// and https://www.opengl.org/sdk/docs/man4/html/glVertexAttribDivisor.xhtml
+	void setAttributeDivisor(int location, int divisor);
+#endif
+
 	void setVertexBuffer(ofBufferObject & buffer, int numCoords, int stride, int offset=0);
 	void setColorBuffer(ofBufferObject & buffer, int stride, int offset=0);
 	void setNormalBuffer(ofBufferObject & buffer, int stride, int offset=0);
@@ -103,7 +112,7 @@ public:
 	bool getUsingIndices() const;
 	
 	void draw(int drawMode, int first, int total) const;
-	void drawElements(int drawMode, int amt) const;
+	void drawElements(int drawMode, int amt, int offsetelements = 0) const;
 	
 	void drawInstanced(int drawMode, int first, int total, int primCount) const;
 	void drawElementsInstanced(int drawMode, int amt, int primCount) const;
@@ -124,10 +133,6 @@ public:
 	int getNumVertices() const;
 	int getNumIndices() const;
 	
-
-	static void disableVAOs();
-	static void enableVAOs();
-
 	bool hasAttribute(int attributePos_) const;
 
 private:
@@ -151,6 +156,7 @@ private:
 		int numCoords;
 		GLuint location;
 		bool normalize;
+		int divisor;
 	};
 
 	struct IndexAttribute{

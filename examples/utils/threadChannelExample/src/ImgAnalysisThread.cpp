@@ -20,17 +20,17 @@ ImgAnalysisThread::~ImgAnalysisThread(){
 	// when the class is destroyed
 	// close both channels and wait for
 	// the thread to finish
-	toAnalize.close();
-	analized.close();
+	toAnalyze.close();
+	analyzed.close();
 	waitForThread(true);
 }
 
-void ImgAnalysisThread::analize(ofPixels & pixels){
+void ImgAnalysisThread::analyze(ofPixels & pixels){
 	// send the frame to the thread for analyzing
 	// this makes a copy but we can't avoid it anyway if
 	// we want to update the grabber while analyzing
-	// previous frames
-	toAnalize.send(pixels);
+    // previous frames
+	toAnalyze.send(pixels);
 }
 
 void ImgAnalysisThread::update(){
@@ -40,10 +40,13 @@ void ImgAnalysisThread::update(){
 	// the analysis
 	// tryReceive doesn't reallocate or make any copies
 	newFrame = false;
-	while(analized.tryReceive(pixels)){
+	while(analyzed.tryReceive(pixels)){
 		newFrame = true;
 	}
 	if(newFrame){
+        if(!texture.isAllocated()){
+            texture.allocate(pixels);
+        }
 		texture.loadData(pixels);
 	}
 }
@@ -61,44 +64,45 @@ ofTexture & ImgAnalysisThread::getTexture(){
 }
 
 void ImgAnalysisThread::draw(float x, float y){
-	texture.draw(x,y);
+    if(texture.isAllocated()){
+        texture.draw(x,y);
+    }else{
+        ofDrawBitmapString("No frames analyzed yet", x+20, y+20);
+    }
 }
 
 void ImgAnalysisThread::draw(float x, float y, float w, float h){
-	texture.draw(x,y,w,h);
+    if(texture.isAllocated()){
+        texture.draw(x,y,w,h);
+    }else{
+        ofDrawBitmapString("No frames analyzed yet", x+20, y+20);
+    }
 }
 
 void ImgAnalysisThread::threadedFunction(){
-	while(isThreadRunning()){
-		// wait until there's a new frame
-		// this blocks the thread, so it doesn't use
-		// the CPU at all, until a frame arrives.
-		// also receive doesn't allocate or make any copies
-		ofPixels pixels;
-		if(toAnalize.receive(pixels)){
-			// we have a new frame, process it, the analysis
-			// here is just a thresholding for the sake of
-			// simplicity
-			pixels.setImageType(OF_IMAGE_GRAYSCALE);
-			for(int i=0;i<pixels.size();i++){
-				if(pixels[i]>80) pixels[i] = 255;
-				else pixels[i] = 0;
-			}
+    // wait until there's a new frame
+    // this blocks the thread, so it doesn't use
+    // the CPU at all, until a frame arrives.
+    // also receive doesn't allocate or make any copies
+    ofPixels pixels;
+    while(toAnalyze.receive(pixels)){
+        // we have a new frame, process it, the analysis
+        // here is just a thresholding for the sake of
+        // simplicity
+        pixels.setImageType(OF_IMAGE_GRAYSCALE);
+        for(auto & p: pixels){
+            if(p > 80) p = 255;
+            else p = 0;
+        }
 
-			// once processed send the result back to the
-			// main thread. in c++11 we can move it to
-			// avoid a copy
+        // once processed send the result back to the
+        // main thread. in c++11 we can move it to
+        // avoid a copy
 #if __cplusplus>=201103
-			analized.send(std::move(pixels));
+        analyzed.send(std::move(pixels));
 #else
-			analized.send(pixels);
+        analyzed.send(pixels);
 #endif
-		}else{
-			// if receive returns false the channel
-			// has been closed, go out of the while loop
-			// to end the thread
-			break;
-		}
 	}
 }
 

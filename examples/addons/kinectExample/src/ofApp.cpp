@@ -1,5 +1,9 @@
 #include "ofApp.h"
 
+/*
+    If you are struggling to get the device to connect ( especially Windows Users )
+    please look at the ReadMe: in addons/ofxKinect/README.md
+*/
 
 //--------------------------------------------------------------
 void ofApp::setup() {
@@ -270,16 +274,34 @@ void ofApp::keyPressed (int key) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button)
-{}
+{
+	
+}
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button)
-{}
+{
+
+}
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button)
-{}
+{
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseEntered(int x, int y){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseExited(int x, int y){
+
+}
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h)
-{}
+{
+
+}

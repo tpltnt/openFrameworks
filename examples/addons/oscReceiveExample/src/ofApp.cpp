@@ -29,7 +29,7 @@ void ofApp::update(){
 	while(receiver.hasWaitingMessages()){
 		// get the next message
 		ofxOscMessage m;
-		receiver.getNextMessage(&m);
+		receiver.getNextMessage(m);
         
 		// check for mouse moved message
 		if(m.getAddress() == "/mouse/position"){
@@ -133,6 +133,16 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseEntered(int x, int y){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseExited(int x, int y){
 
 }
 

@@ -21,6 +21,10 @@
 #include <gst/gl/x11/gstgldisplay_x11.h>
 #include <gst/gl/egl/gstgldisplay_egl.h>
 #endif
+#ifdef TARGET_WIN32
+#include <winbase.h>	// to use SetEnvironmentVariableA
+#endif
+
 
 ofGstUtils::ofGstMainLoopThread * ofGstUtils::mainLoop;
 
@@ -118,7 +122,9 @@ ofGstUtils::ofGstUtils() {
 	if(!gst_inited){
 #ifdef TARGET_WIN32
 		string gst_path = g_getenv("GSTREAMER_1_0_ROOT_X86");
-		putenv(("GST_PLUGIN_PATH_1_0=" + ofFilePath::join(gst_path, "lib\\gstreamer-1.0") + ";.").c_str());
+		//putenv(("GST_PLUGIN_PATH_1_0=" + ofFilePath::join(gst_path, "lib\\gstreamer-1.0") + ";.").c_str());
+		// to make it compatible with gcc and C++11 standard
+		SetEnvironmentVariableA("GST_PLUGIN_PATH_1_0", ofFilePath::join(gst_path, "lib\\gstreamer-1.0").c_str());
 #endif
 		gst_init (NULL, NULL);
 		gst_inited=true;
@@ -163,9 +169,8 @@ void ofGstUtils::eos_cb(){
 	bIsMovieDone = true;
 	if(appsink && !isAppSink) appsink->on_eos();
 	if(closing){
-		eosMutex.lock();
-		eosCondition.signal();
-		eosMutex.unlock();
+		std::unique_lock<std::mutex> lck(eosMutex);
+		eosCondition.notify_all();
 	}
 }
 
@@ -494,15 +499,12 @@ void ofGstUtils::setSpeed(float _speed){
 void ofGstUtils::close(){
 	if(bPlaying){
 		if(!bIsMovieDone && !bPaused && !isStream){
-			eosMutex.lock();
+			std::unique_lock<std::mutex> lck(eosMutex);
 			closing = true;
 			gst_element_send_event(gstPipeline,gst_event_new_eos());
-			try{
-				eosCondition.wait(eosMutex,5000);
-			}catch(const Poco::TimeoutException & e){
+			if(eosCondition.wait_for(lck,std::chrono::milliseconds(5000))==std::cv_status::timeout){
 				ofLogWarning("ofGstUtils") << "didn't received EOS in 5s, closing pipeline anyway";
 			}
-			eosMutex.unlock();
 			closing = false;
 		}
 	}
@@ -693,6 +695,8 @@ bool ofGstUtils::gstHandleMessage(GstBus * bus, GstMessage * msg){
 			g_free (name);
 			break;
 		}
+		
+#if GST_VERSION_MAJOR==1
 		case GST_MESSAGE_HAVE_CONTEXT:{
 			GstContext *context;
 			const gchar *context_type;
@@ -709,6 +713,7 @@ bool ofGstUtils::gstHandleMessage(GstBus * bus, GstMessage * msg){
 			gst_context_unref (context);
 			break;
 		}
+#endif
 		default:
 			ofLogVerbose("ofGstUtils") << "gstHandleMessage(): unhandled message from " << GST_MESSAGE_SRC_NAME(msg);
 		break;
@@ -785,7 +790,7 @@ ofGstVideoUtils::~ofGstVideoUtils(){
 
 void ofGstVideoUtils::close(){
 	ofGstUtils::close();
-	ofScopedLock lock(mutex);
+	std::unique_lock<std::mutex> lock(mutex);
 	pixels.clear();
 	backPixels.clear();
 	eventPixels.clear();
@@ -794,7 +799,10 @@ void ofGstVideoUtils::close(){
 	bBackPixelsChanged			= false;
 	frontBuffer.reset();
 	backBuffer.reset();
+	
+#if GST_VERSION_MAJOR==1
 	while(!bufferQueue.empty()) bufferQueue.pop();
+#endif
 }
 
 bool ofGstVideoUtils::isInitialized() const{
@@ -828,7 +836,7 @@ ofTexture * ofGstVideoUtils::getTexture(){
 void ofGstVideoUtils::update(){
 	if (isLoaded()){
 		if(!isFrameByFrame()){
-			ofScopedLock lock(mutex);
+			std::unique_lock<std::mutex> lock(mutex);
 			bHavePixelsChanged = bBackPixelsChanged;
 			if (bHavePixelsChanged){
 				bBackPixelsChanged=false;
@@ -846,20 +854,7 @@ void ofGstVideoUtils::update(){
 			}
 		}else{
 #if GST_VERSION_MAJOR==0
-			GstBuffer *buffer;
-
-			//get the buffer from appsink
-			if(isPaused()) buffer = gst_app_sink_pull_preroll (GST_APP_SINK (getSink()));
-			else buffer = gst_app_sink_pull_buffer (GST_APP_SINK (getSink()));
-
-			if(buffer){
-				if(pixels.isAllocated()){
-					pixels.setFromExternalPixels(GST_BUFFER_DATA (buffer),pixels.getWidth(),pixels.getHeight(),pixels.getNumChannels());
-					prevBuffer = shared_ptr<GstBuffer>(buffer,gst_buffer_unref);;
-					bHavePixelsChanged=true;
-				}
-			}
-		}
+			ofLogError() << "frame by frame doesn't work any more in 0.10";
 #else
 			GstBuffer * buffer;
 			GstSample * sample;
@@ -882,8 +877,8 @@ void ofGstVideoUtils::update(){
 					gst_buffer_unmap(buffer,&mapinfo);
 				}
 			}
-		}
 #endif
+		}
 	}else{
 		ofLogWarning("ofGstVideoUtils") << "update(): ofGstVideoUtils not loaded";
 	}
@@ -1159,7 +1154,7 @@ ofPixelFormat ofGstVideoUtils::getPixelFormat() const{
 }
 
 bool ofGstVideoUtils::allocate(int w, int h, ofPixelFormat pixelFormat){
-	Poco::ScopedLock<ofMutex> lock(mutex);
+	std::unique_lock<std::mutex> lock(mutex);
 #if GST_VERSION_MAJOR>0
 	if(pixelFormat!=internalPixelFormat){
 		ofLogNotice("ofGstVideoUtils") << "allocating with " << w << "x" << h << " " << getGstFormatName(pixelFormat);
@@ -1178,7 +1173,7 @@ bool ofGstVideoUtils::allocate(int w, int h, ofPixelFormat pixelFormat){
 }
 
 void ofGstVideoUtils::reallocateOnNextFrame(){
-	Poco::ScopedLock<ofMutex> lock(mutex);
+	std::unique_lock<std::mutex> lock(mutex);
 	pixels.clear();
 	backPixels.clear();
 	bIsFrameNew					= false;
@@ -1186,7 +1181,9 @@ void ofGstVideoUtils::reallocateOnNextFrame(){
 	bBackPixelsChanged			= false;
 	frontBuffer.reset();
 	backBuffer.reset();
+#if GST_VERSION_MAJOR==1
 	while(!bufferQueue.empty()) bufferQueue.pop();
+#endif
 }
 
 #if GST_VERSION_MAJOR==0
@@ -1202,13 +1199,13 @@ GstFlowReturn ofGstVideoUtils::process_buffer(shared_ptr<GstBuffer> _buffer){
 	}
 	mutex.lock();
 	if(pixels.isAllocated()){
-		buffer = _buffer;
+		backBuffer = _buffer;
         if(stride > 0) {
-            backPixels.setFromAlignedPixels(GST_BUFFER_DATA (buffer.get()),pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat(),stride);
+            backPixels.setFromAlignedPixels(GST_BUFFER_DATA (backBuffer.get()),pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat(),stride);
         }
         else {
-            backPixels.setFromExternalPixels(GST_BUFFER_DATA (buffer.get()),pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat());
-            eventPixels.setFromExternalPixels(GST_BUFFER_DATA (buffer.get()),pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat());
+            backPixels.setFromExternalPixels(GST_BUFFER_DATA (backBuffer.get()),pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat());
+            eventPixels.setFromExternalPixels(GST_BUFFER_DATA (backBuffer.get()),pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat());
         }
 		bBackPixelsChanged=true;
 		mutex.unlock();
@@ -1247,7 +1244,7 @@ GstFlowReturn ofGstVideoUtils::process_sample(shared_ptr<GstSample> sample){
 			bufferQueue.push(sample);
 			gst_buffer_unmap(_buffer, &mapinfo);
 			bool newTexture=false;
-			ofScopedLock lock(mutex);
+			std::unique_lock<std::mutex> lock(mutex);
 			while(bufferQueue.size()>2){
 				backBuffer = bufferQueue.front();
 				bufferQueue.pop();
@@ -1303,7 +1300,13 @@ GstFlowReturn ofGstVideoUtils::process_sample(shared_ptr<GstSample> sample){
 
 	if(pixels.isAllocated()){
 		if(stride > 0) {
-			backPixels.setFromAlignedPixels(mapinfo.data,pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat(),stride);
+			if(pixels.getPixelFormat() == OF_PIXELS_I420){
+				GstVideoInfo v_info = getVideoInfo(sample.get());
+				std::vector<int> strides{v_info.stride[0],v_info.stride[1],v_info.stride[2]};
+				backPixels.setFromAlignedPixels(mapinfo.data,pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat(),strides);
+			} else {
+				backPixels.setFromAlignedPixels(mapinfo.data,pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat(),stride);
+			}
 		} else if(!copyPixels){
 			backPixels.setFromExternalPixels(mapinfo.data,pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat());
 			eventPixels.setFromExternalPixels(mapinfo.data,pixels.getWidth(),pixels.getHeight(),pixels.getPixelFormat());

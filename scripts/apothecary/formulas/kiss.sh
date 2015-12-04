@@ -5,7 +5,7 @@
 # http://sourceforge.net/projects/kissfft/
 #
 # has a Makefile
-FORMULA_TYPES=( "osx" "linux" "linux64" "win_cb" "ios" "android" )
+FORMULA_TYPES=( "osx" "linux" "linux64" "msys2" "ios" "android" )
 
 # define the version
 VER=130
@@ -36,9 +36,9 @@ function prepare() {
 function build() {
 
 	if [ "$TYPE" == "linux" ] ; then
-		make -f Makefile.linux	
+		make  -j${PARALLEL_MAKE} -f Makefile.linux	
 	elif [ "$TYPE" == "linux64" ] ; then
-		make -f Makefile.linux64	
+		make  -j${PARALLEL_MAKE} -f Makefile.linux64	
 	else
 		echo "build not needed for $TYPE"
 	fi
@@ -69,7 +69,9 @@ function copy() {
 	fi
 
 	# copy license file
-    cp -v COPYING $1/
+	rm -rf $1/license # remove any older files if exists
+	mkdir -p $1/license
+	cp -v COPYING $1/license/
 }
 
 # executed inside the lib src dir

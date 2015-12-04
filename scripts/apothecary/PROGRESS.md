@@ -8,7 +8,7 @@
 | ✓C      | copy only, written & tested                
 | N/A     | not applicable
 
-| Lib                             | osx | linux | linux64 | linuxarmv6l | linuxarmv7l | vs | win_cb | ios | android |
+| Lib                             | osx | linux | linux64 | linuxarmv6l | linuxarmv7l | vs | msys2 | ios | android |
 |---------------------------------|-----|-------|---------|-------------|-------------|----|--------|-----|---------|
 | FreeImage                       | ✓   | N/A   | N/A     | N/A         | N/A         | ✗  | ✗      | ✓   | ✗       |
 | FreeType                        | ✓   | N/A   | N/A     | N/A         | N/A         | ?  | ?      | ✓   | ?       |
@@ -26,8 +26,8 @@
 | quicktime                       | N/A | N/A   | N/A     | N/A         | N/A         | ✗  | ✗      | N/A | N/A     |
 | rtAudio                         | ✓?  | ✗     | ✗       | ✗           | ✗           | ✗  | ✗      | N/A | N/A     |
 | videoInput                      | N/A | N/A   | N/A     | N/A         | N/A         | ✓  | ✗      | N/A | N/A     |
-| ofxAssimpModelLoader -> assimp  | ☁   | ✗     | ✗       | ✗           | ✗           | ✗  | ✗      | ☁   | ✗       |
-| ofxOpenCV -> opencv             | ✓?  | ✗     | ✗       | ✗           | ✗           | ✗  | ✗      | ☁   | ✗       |
+| ofxAssimpModelLoader -> assimp  | ☁   | ✗     | ✗       | ✗           | ✗           | ✗  | ✗      | ✓?  | ✗       |
+| ofxOpenCV -> opencv             | ✓?  | ✗     | ✗       | ✗           | ✗           | ✗  | ✗      | ✓?  | ✗       |
 | ofxOsc -> oscpack               | ✗C  | ✗C    | ✗C      | ✗C          | ✗C          | ✗C | ✗C     | ✗C  | ✗C      |
 | ofxSvg -> svgTiny               | ✗C  | ✗C    | ✗C      | ✗C          | ✗C          | ✗C | ✗C     | ✗C  | ✗C      |
 | ofxXmlSettings -> tinyxml       | ✗C  | ✗C    | ✗C      | ✗C          | ✗C          | ✗C | ✗C     | ✗C  | ✗C      |

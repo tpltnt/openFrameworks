@@ -14,6 +14,15 @@ VER=1.6.0-release
 GIT_URL=https://github.com/pocoproject/poco
 GIT_TAG=poco-1.6.0-release
 
+FORMULA_TYPES=( "osx" "ios" "tvos" "android" "emscripten" "vs" "linux" "linux64" "linuxarmv6l" "linuxarmv7l")
+
+#dependencies
+FORMULA_DEPENDS=( "openssl" )
+
+# tell apothecary we want to manually call the dependency commands
+# as we set some env vars for osx the depends need to know about
+FORMULA_DEPENDS_MANUAL=1
+
 # For Poco Builds, we omit both Data/MySQL and Data/ODBC because they require
 # 3rd Party libraries.  See https://github.com/pocoproject/poco/blob/develop/README
 # for more information.
@@ -40,13 +49,27 @@ function prepare() {
 	if [ "$SHA" != "" ] ; then
 		git reset --hard $SHA
 	fi
+	
+	if [ "$TYPE" != "msys2" ] && [ "$TYPE" != "linux" ] && [ "$TYPE" != "ios" ] && [ "$TYPE" != "tvos" ]; then
+		# manually prepare dependencies
+		apothecaryDependencies download
+		apothecaryDependencies prepare
+		# Build and copy all dependencies in preparation
+		apothecaryDepend build openssl
+		apothecaryDepend copy openssl
+	fi
 
 	# make backups of the ios config files since we need to edit them
-	if [ "$TYPE" == "ios" ] ; then
+	if [[ "$TYPE" == "ios" ||  "$TYPE" == "tvos" ]] ; then
 		mkdir -p lib/$TYPE
 		mkdir -p lib/iPhoneOS
 
 		cd build/config
+
+		if [[ "$TYPE" == "tvos" ]]; then 
+			cp $FORMULA_DIR/AppleTV AppleTV
+			cp $FORMULA_DIR/AppleTVSimulator AppleTVSimulator
+		fi
 
 		cp iPhoneSimulator-clang-libc++ iPhoneSimulator-clang-libc++.orig
 		cp iPhone-clang-libc++ iPhone-clang-libc++.orig
@@ -67,6 +90,12 @@ function prepare() {
 		cd ../../
 
 	elif [ "$TYPE" == "vs" ] ; then
+		#change the build win cmd file for vs2015 compatibility
+		rm buildwin.cmd
+		CURRENTPATH=`pwd`
+		cp -v $FORMULA_DIR/buildwin.cmd $CURRENTPATH
+		
+		
 		# Patch the components to exclude those that we aren't using.
 		if patch -p0 -u -N --dry-run --silent < $FORMULA_DIR/components.patch 2>/dev/null ; then
 			patch -p0 -u < $FORMULA_DIR/components.patch
@@ -91,6 +120,13 @@ function prepare() {
 		sed -i.tmp "s|%OPENSSL_DIR%\\\lib;.*|%OPENSSL_DIR%\\\lib\\\vs|g" buildwin.cmd
 	elif [ "$TYPE" == "android" ] ; then
 		installAndroidToolchain
+		if patch -p0 -u -N --dry-run --silent < $FORMULA_DIR/android.patch 2>/dev/null ; then
+			patch -p0 -u < $FORMULA_DIR/android.patch
+		fi
+		if patch -p0 -u -N --dry-run --silent < $FORMULA_DIR/android.config.patch 2>/dev/null ; then
+			patch -p0 -u < $FORMULA_DIR/android.config.patch
+		fi
+
 	fi
 
 }
@@ -109,11 +145,11 @@ function build() {
 		echo "--------------------"
 		echo "Making Poco-${VER}"
 		echo "--------------------"
-		echo "Configuring for i386 libstdc++ ..."
+		echo "Configuring for i386 libc++ ..."
 
 		# 32 bit
 		# For OS 10.9+ we must explicitly set libstdc++ for the 32-bit OSX build.
-		./configure $BUILD_OPTS --cflags=-stdlib=libstdc++ --config=Darwin32 > "${LOG}" 2>&1
+		./configure $BUILD_OPTS --config=Darwin32-clang-libc++ > "${LOG}" 2>&1
 		if [ $? != 0 ];
 		then
 			tail -n 100 "${LOG}"
@@ -126,7 +162,16 @@ function build() {
 	    echo "--------------------"
 		echo "Running make"
 		LOG="$CURRENTPATH/build/$TYPE/poco-make-i386-${VER}.log"
-		make >> "${LOG}" 2>&1
+		export BUILD_OUTPUT=$LOG
+	    export PING_SLEEP=30s
+	    export PING_LOOP_PID
+	    trap 'error_handler' ERR
+	    bash -c "while true; do echo \$(date) - Building Poco ...; sleep $PING_SLEEP; done" &
+PING_LOOP_PID=$!
+		make -j${PARALLEL_MAKE} >> "${BUILD_OUTPUT}" 2>&1
+		dump_output
+		kill $PING_LOOP_PID
+		trap - ERR
 		if [ $? != 0 ];
 		then
 			tail -n 100 "${LOG}"
@@ -153,24 +198,25 @@ function build() {
 	    echo "--------------------"
 		echo "Running make"
 		LOG="$CURRENTPATH/build/$TYPE/poco-make-x86_64-${VER}.log"
-		make >> "${LOG}" 2>&1
-		if [ $? != 0 ];
-		then
-			tail -n 100 "${LOG}"
-	    	echo "Problem while make - Please check ${LOG}"
-	    	exit 1
-	    else
-	    	tail -n 100 "${LOG}"
-	    	echo "Make Successful"
-	    fi
+		export BUILD_OUTPUT=$LOG
+	    export PING_SLEEP=30s
+	    export PING_LOOP_PID
+	    trap 'error_handler' ERR
+	    bash -c "while true; do echo \$(date) - Building Poco ...; sleep $PING_SLEEP; done" &
+PING_LOOP_PID=$!
+
+		make -j${PARALLEL_MAKE} >> "${BUILD_OUTPUT}" 2>&1
+		dump_output
+		kill $PING_LOOP_PID
+		trap - ERR
 
 		unset POCO_ENABLE_CPP11
 
 		cd lib/Darwin
 
 		# delete debug builds
-		rm i386/*d.a
-		rm x86_64/*d.a
+		rm -f i386/*d.a
+		rm -f x86_64/*d.a
 
 		# link into universal lib, strip "lib" from filename
 		local lib
@@ -182,42 +228,47 @@ function build() {
 		done
 
 	elif [ "$TYPE" == "vs" ] ; then
-		cmd //c buildwin.cmd ${VS_VER}0 build static_md both Win32 nosamples notests
-
-	elif [ "$TYPE" == "win_cb" ] ; then
-		local BUILD_OPTS="--no-tests --no-samples --static --omit=CppUnit,CppUnit/WinTestRunner,Data/MySQL,Data/ODBC,PageCompiler,PageCompiler/File2Page,CppParser,PDF,PocoDoc,ProGen"
-
-		# Locate the path of the openssl libs distributed with openFrameworks.
-		local OF_LIBS_OPENSSL="$LIBS_DIR/openssl/"
-
-		# get the absolute path to the included openssl libs
-		local OF_LIBS_OPENSSL_ABS_PATH=$(cd $(dirname $OF_LIBS_OPENSSL); pwd)/$(basename $OF_LIBS_OPENSSL)
-
-		local OPENSSL_INCLUDE=$OF_LIBS_OPENSSL_ABS_PATH/include
-		local OPENSSL_LIBS=$OF_LIBS_OPENSSL_ABS_PATH/lib/win_cb
+		if [ $ARCH == 32 ] ; then
+			cmd //c buildwin.cmd ${VS_VER}0 upgrade static_md both Win32 nosamples notests
+			cmd //c buildwin.cmd ${VS_VER}0 build static_md both Win32 nosamples notests
+		elif [ $ARCH == 64 ] ; then
+			cmd //c buildwin.cmd ${VS_VER}0 upgrade static_md both x64 nosamples notests
+			cmd //c buildwin.cmd ${VS_VER}0 build static_md both x64 nosamples notests
+		fi
+	elif [ "$TYPE" == "msys2" ] ; then
+	    cp $FORMULA_DIR/MinGWConfig64 build/config/MinGW
+		local BUILD_OPTS="--no-tests --no-samples --static  --no-sharedlibs --omit=CppUnit,CppUnit/WinTestRunner,Data/MySQL,Data/ODBC,PageCompiler,PageCompiler/File2Page,CppParser,PDF,PocoDoc,ProGen"
 
 		./configure $BUILD_OPTS \
-					--include-path=$OPENSSL_INCLUDE \
-					--library-path=$OPENSSL_LIBS \
 					--config=MinGW
 
-		make
+		make -j${PARALLEL_MAKE}
 
 		# Delete debug libs.
-		lib/MinGW/i686/*d.a
+		rm -f lib/MinGW/i686/*d.a
+		rm -f lib/MinGW/x86_64/*d.a
 
-	elif [ "$TYPE" == "ios" ] ; then
-
-
-		SDKVERSION=`xcrun -sdk iphoneos --show-sdk-version`
+	elif [[ "$TYPE" == "ios" || "$TYPE" == "tvos" ]] ; then
 		set -e
+		SDKVERSION=""
+        if [ "${TYPE}" == "tvos" ]; then 
+            SDKVERSION=`xcrun -sdk appletvos --show-sdk-version`
+        elif [ "$TYPE" == "ios" ]; then
+            SDKVERSION=`xcrun -sdk iphoneos --show-sdk-version`
+        fi
 		CURRENTPATH=`pwd`
 
 		DEVELOPER=$XCODE_DEV_ROOT
 		TOOLCHAIN=${DEVELOPER}/Toolchains/XcodeDefault.xctoolchain
 		VERSION=$VER
 
-		local IOS_ARCHS="i386 x86_64 armv7 arm64"
+		local IOS_ARCHS
+        if [ "${TYPE}" == "tvos" ]; then 
+            IOS_ARCHS="x86_64 arm64"
+        elif [ "$TYPE" == "ios" ]; then
+            IOS_ARCHS="i386 x86_64 armv7 arm64" #armv7s
+        fi
+
 		echo "--------------------"
 		echo $CURRENTPATH
 
@@ -250,7 +301,7 @@ function build() {
 		local OF_LIBS_OPENSSL_ABS_PATH=$(cd $(dirname $OF_LIBS_OPENSSL); pwd)/$(basename $OF_LIBS_OPENSSL)
 
 		local OPENSSL_INCLUDE=$OF_LIBS_OPENSSL_ABS_PATH/include
-		local OPENSSL_LIBS=$OF_LIBS_OPENSSL_ABS_PATH/lib/ios
+		local OPENSSL_LIBS=$OF_LIBS_OPENSSL_ABS_PATH/lib/$TYPE
 
 		local BUILD_OPTS="--no-tests --no-samples --static --omit=CppUnit,CppUnit/WinTestRunner,Data/MySQL,Data/ODBC,PageCompiler,PageCompiler/File2Page,CppParser,PDF,PocoDoc,ProGen --include-path=$OPENSSL_INCLUDE --library-path=$OPENSSL_LIBS"
 
@@ -262,26 +313,56 @@ function build() {
 		do
 			MIN_IOS_VERSION=$IOS_MIN_SDK_VER
 		    # min iOS version for arm64 is iOS 7
-
+		
 		    if [[ "${IOS_ARCH}" == "arm64" || "${IOS_ARCH}" == "x86_64" ]]; then
 		    	MIN_IOS_VERSION=7.0 # 7.0 as this is the minimum for these architectures
 		    elif [ "${IOS_ARCH}" == "i386" ]; then
-		    	MIN_IOS_VERSION=5.1 # 6.0 to prevent start linking errors
+		    	MIN_IOS_VERSION=7.0 # 6.0 to prevent start linking errors
 		    fi
 		    export IPHONE_SDK_VERSION_MIN=$IOS_MIN_SDK_VER
 
 			export POCO_TARGET_OSARCH=$IOS_ARCH
 
 			MIN_TYPE=-miphoneos-version-min=
+
 			if [[ "${IOS_ARCH}" == "i386" || "${IOS_ARCH}" == "x86_64" ]];
 			then
-				PLATFORM="iPhoneSimulator"
-				BUILD_POCO_CONFIG=$BUILD_POCO_CONFIG_SIMULATOR
-				MIN_TYPE=-mios-simulator-version-min=
+                if [ "${TYPE}" == "tvos" ]; then 
+                    PLATFORM="AppleTVSimulator"
+                    BUILD_POCO_CONFIG="AppleTVSimulator"
+                elif [ "$TYPE" == "ios" ]; then
+                    PLATFORM="iPhoneSimulator"
+                    BUILD_POCO_CONFIG=$BUILD_POCO_CONFIG_SIMULATOR
+                fi
 			else
-				PLATFORM="iPhoneOS"
-				BUILD_POCO_CONFIG=$BUILD_POCO_CONFIG_SIMULATOR
+                if [ "${TYPE}" == "tvos" ]; then 
+                    PLATFORM="AppleTVOS"
+                    BUILD_POCO_CONFIG="AppleTV"
+                elif [ "$TYPE" == "ios" ]; then
+                    PLATFORM="iPhoneOS"
+                    BUILD_POCO_CONFIG=$BUILD_POCO_CONFIG_IPHONE
+                fi
 			fi
+
+			if [ "${TYPE}" == "tvos" ]; then 
+    		    MIN_TYPE=-mtvos-version-min=
+    		    if [[ "${IOS_ARCH}" == "i386" || "${IOS_ARCH}" == "x86_64" ]]; then
+    		    	MIN_TYPE=-mtvos-simulator-version-min=
+    		    fi
+            elif [ "$TYPE" == "ios" ]; then
+                MIN_TYPE=-miphoneos-version-min=
+                if [[ "${IOS_ARCH}" == "i386" || "${IOS_ARCH}" == "x86_64" ]]; then
+                    MIN_TYPE=-mios-simulator-version-min=
+                fi
+            fi
+
+            BITCODE=""
+            NOFORK=""
+            if [[ "$TYPE" == "tvos" ]]; then
+                BITCODE=-fembed-bitcode;
+                MIN_IOS_VERSION=9.0
+                NOFORK="-DPOCO_NO_FORK_EXEC"
+            fi
 
 			export CROSS_TOP="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer"
 			export CROSS_SDK="${PLATFORM}${SDKVERSION}.sdk"
@@ -293,15 +374,15 @@ function build() {
 
 			if [[ "${IOS_ARCH}" == "i386" || "${IOS_ARCH}" == "x86_64" ]];
 			then
-				export OSFLAGS="-arch $POCO_TARGET_OSARCH -fPIC -DPOCO_ENABLE_CPP11 -isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} $MIN_TYPE$IPHONE_SDK_VERSION_MIN"
+				export OSFLAGS="-arch $POCO_TARGET_OSARCH $BITCODE -DNDEBUG $NOFORK -fPIC -DPOCO_ENABLE_CPP11 -isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} $MIN_TYPE$MIN_IOS_VERSION"
 			else
-				export OSFLAGS="-arch $POCO_TARGET_OSARCH -fPIC -DPOCO_ENABLE_CPP11 -isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} $MIN_TYPE$IPHONE_SDK_VERSION_MIN"
+				export OSFLAGS="-arch $POCO_TARGET_OSARCH $BITCODE -DNDEBUG $NOFORK -fPIC -DPOCO_ENABLE_CPP11 -isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} $MIN_TYPE$MIN_IOS_VERSION"
 			fi
 			echo "--------------------"
 			echo "Making Poco-${VER} for ${PLATFORM} ${SDKVERSION} ${IOS_ARCH} : iOS Minimum=$MIN_IOS_VERSION"
 			echo "--------------------"
 			echo "Configuring for ${IOS_ARCH} ..."
-			./configure $BUILD_OPTS --config=$BUILD_POCO_CONFIG_IPHONE > "${LOG}" 2>&1
+			./configure $BUILD_OPTS --config=$BUILD_POCO_CONFIG > "${LOG}" 2>&1
 
 			if [ $? != 0 ]; then
 				tail -n 100 "${LOG}"
@@ -312,7 +393,21 @@ function build() {
 		    fi
 		    echo "--------------------"
 		    echo "Running make for ${IOS_ARCH}"
-			make >> "${LOG}" 2>&1
+		    echo "${LOG}"
+
+		    export BUILD_OUTPUT=$LOG
+		    export PING_SLEEP=30s
+		    export PING_LOOP_PID
+		    trap 'error_handler' ERR
+		    bash -c "while true; do echo \$(date) - Building Poco ...; sleep $PING_SLEEP; done" &
+PING_LOOP_PID=$!
+
+
+			make -j${PARALLEL_MAKE} >> "${BUILD_OUTPUT}" 2>&1
+			dump_output
+			kill $PING_LOOP_PID
+			trap - ERR
+			
 			if [ $? != 0 ];
 		    then
 		    	tail -n 100 "${LOG}"
@@ -329,37 +424,58 @@ function build() {
 
 		done
 
-		cd lib/iPhoneOS
-		# link into universal lib, strip "lib" from filename
-		local lib
-		for lib in $( ls -1 i386) ; do
-			local renamedLib=$(echo $lib | sed 's|lib||')
-			if [ ! -e $renamedLib ] ; then
-				lipo -c armv7/$lib arm64/$lib i386/$lib x86_64/$lib -o ../ios/$renamedLib
-			fi
-		done
+		if [[ "${TYPE}" == "tvos" ]] ; then
+			cd lib/AppleTVOS
+			# link into universal lib, strip "lib" from filename
+			local lib
+			for lib in $( ls -1 arm64) ; do
+				local renamedLib=$(echo $lib | sed 's|lib||')
+				if [ ! -e $renamedLib ] ; then
+						lipo -c arm64/$lib \
+						../AppleTVSimulator/x86_64/$lib \
+						-o ../tvos/$renamedLib
+				fi
+			done
+		elif [[ "$TYPE" == "ios" ]]; then
+			cd lib/iPhoneOS
+			# link into universal lib, strip "lib" from filename
+			local lib
+			for lib in $( ls -1 arm64) ; do
+				local renamedLib=$(echo $lib | sed 's|lib||')
+				if [ ! -e $renamedLib ] ; then
+						lipo -c armv7/$lib \
+						arm64/$lib \
+						../iPhoneSimulator/i386/$lib \
+						../iPhoneSimulator/x86_64/$lib \
+						-o ../ios/$renamedLib
+				fi
+			done
+		fi
+		
 
 		cd ../../
 
-		echo "--------------------"
-		echo "Stripping any lingering symbols"
+		if [[ "$TYPE" == "ios" ]]; then
+			echo "--------------------"
+			echo "Stripping any lingering symbols"
 
-		cd lib/$TYPE
-		SLOG="$CURRENTPATH/lib/$TYPE-stripping.log"
-		local TOBESTRIPPED
-		for TOBESTRIPPED in $( ls -1) ; do
-			strip -x $TOBESTRIPPED >> "${SLOG}" 2>&1
-			if [ $? != 0 ];
-		    then
-		    	tail -n 100 "${SLOG}"
-		    	echo "Problem while stripping lib - Please check ${SLOG}"
-		    	exit 1
-		    else
-		    	echo "Strip Successful for ${SLOG}"
-		    fi
-		done
-
-		cd ../../
+			cd lib/$TYPE
+			SLOG="$CURRENTPATH/lib/$TYPE-stripping.log"
+			local TOBESTRIPPED
+			for TOBESTRIPPED in $( ls -1) ; do
+				strip -x $TOBESTRIPPED >> "${SLOG}" 2>&1
+				if [ $? != 0 ];
+			    then
+			    	tail -n 100 "${SLOG}"
+			    	echo "Problem while stripping lib - Please check ${SLOG}"
+			    	exit 1
+			    else
+			    	echo "Strip Successful for ${SLOG}"
+			    fi
+			done
+			cd ../../
+		fi
+		
 
 		echo "--------------------"
 		echo "Reseting changed files back to originals"
@@ -378,7 +494,7 @@ function build() {
 
 		local OLD_PATH=$PATH
 
-		export PATH=$PATH:$BUILD_DIR/Toolchains/Android/androideabi/bin:$BUILD_DIR/Toolchains/Android/x86/bin
+		export PATH=$PATH:$BUILD_DIR/Toolchains/Android/arm/bin:$BUILD_DIR/Toolchains/Android/x86/bin
 
 		local OF_LIBS_OPENSSL="$LIBS_DIR/openssl/"
 
@@ -392,57 +508,31 @@ function build() {
 
 		./configure $BUILD_OPTS \
 					--include-path=$OPENSSL_INCLUDE \
-					--library-path=$OPENSSL_LIBS/armeabi \
-					--config=Android
-
-		make ANDROID_ABI=armeabi
-
-		./configure $BUILD_OPTS \
-					--include-path=$OPENSSL_INCLUDE \
 					--library-path=$OPENSSL_LIBS/armeabi-v7a \
 					--config=Android
-
-		make ANDROID_ABI=armeabi-v7a
-
+        make clean ANDROID_ABI=armeabi-v7a
+		make -j${PARALLEL_MAKE} ANDROID_ABI=armeabi-v7a
+		
 		./configure $BUILD_OPTS \
 					--include-path=$OPENSSL_INCLUDE \
 					--library-path=$OPENSSL_LIBS/x86 \
 					--config=Android
-
-		make ANDROID_ABI=x86
+        make clean ANDROID_ABI=x86
+		make -j${PARALLEL_MAKE} ANDROID_ABI=x86
 
 		echo `pwd`
 
-		rm -v lib/Android/armeabi/*d.a
-		rm -v lib/Android/armeabi-v7a/*d.a
-		rm -v lib/Android/x86/*d.a
+		rm -f lib/Android/armeabi-v7a/*d.a
+		rm -f lib/Android/x86/*d.a
 
 		export PATH=$OLD_PATH
 
-	elif [ "$TYPE" == "linux" ] ; then
+	elif [ "$TYPE" == "linux" ] || [ "$TYPE" == "linux64" ] || [ "$TYPE" == "linuxarmv6l" ] || [ "$TYPE" == "linuxarmv7l" ]; then
 		local BUILD_OPTS="--no-tests --no-samples --static --omit=CppUnit,CppUnit/WinTestRunner,Data/MySQL,Data/ODBC,PageCompiler,PageCompiler/File2Page,CppParser,PDF,PocoDoc,ProGen"
 		./configure $BUILD_OPTS
-		make
+		make -j${PARALLEL_MAKE}
 		# delete debug builds
-		rm lib/Linux/$(uname -m)/*d.a
-	elif [ "$TYPE" == "linux64" ] ; then
-		local BUILD_OPTS="--no-tests --no-samples --static --omit=CppUnit,CppUnit/WinTestRunner,Data/MySQL,Data/ODBC,PageCompiler,PageCompiler/File2Page,CppParser,PDF,PocoDoc,ProGen"
-		./configure $BUILD_OPTS
-		make
-		# delete debug builds
-		rm lib/Linux/x86_64/*d.a
-	elif [ "$TYPE" == "linuxarmv6l" ] ; then
-		local BUILD_OPTS="--no-tests --no-samples --static --omit=CppUnit,CppUnit/WinTestRunner,Data/MySQL,Data/ODBC,PageCompiler,PageCompiler/File2Page,CppParser,PDF,PocoDoc,ProGen"
-		./configure $BUILD_OPTS
-		make
-		# delete debug builds
-		rm lib/Linux/armv6l/*d.a
-	elif [ "$TYPE" == "linuxarmv7l" ] ; then
-		local BUILD_OPTS="--no-tests --no-samples --static --omit=CppUnit,CppUnit/WinTestRunner,Data/MySQL,Data/ODBC,PageCompiler,PageCompiler/File2Page,CppParser,PDF,PocoDoc,ProGen"
-		./configure $BUILD_OPTS
-		make
-		# delete debug builds
-		rm lib/Linux/armv7l/*d.a
+		rm -f lib/Linux/$(uname -m)/*d.a
 	else
 		echoWarning "TODO: build $TYPE lib"
 	fi
@@ -470,15 +560,23 @@ function copy() {
 	if [ "$TYPE" == "osx" ] ; then
 		mkdir -p $1/lib/$TYPE
 		cp -v lib/Darwin/*.a $1/lib/$TYPE
-	elif [ "$TYPE" == "ios" ] ; then
+	elif [[ "$TYPE" == "ios" || "$TYPE" == "tvos" ]] ; then
 		mkdir -p $1/lib/$TYPE
 		cp -v lib/$TYPE/*.a $1/lib/$TYPE
 	elif [ "$TYPE" == "vs" ] ; then
 		mkdir -p $1/lib/$TYPE
-		cp -v lib/*.lib $1/lib/$TYPE
-	elif [ "$TYPE" == "win_cb" ] ; then
+		if [ $ARCH == 32 ] ; then
+			mkdir -p $1/lib/$TYPE/Win32
+			cp -v lib/*.lib $1/lib/$TYPE/Win32
+		elif [ $ARCH == 64 ] ; then
+			mkdir -p $1/lib/$TYPE/x64
+			cp -v lib64/*.lib $1/lib/$TYPE/x64
+		fi
+		
+	elif [ "$TYPE" == "msys2" ] ; then
 		mkdir -p $1/lib/$TYPE
-		cp -v lib/MinGW/i686/*.a $1/lib/$TYPE
+		cp -vf lib/MinGW/i686/*.a $1/lib/$TYPE
+		#cp -vf lib/MinGW/x86_64/*.a $1/lib/$TYPE
 	elif [ "$TYPE" == "linux" ] ; then
 		mkdir -p $1/lib/$TYPE
 		cp -v lib/Linux/$(uname -m)/*.a $1/lib/$TYPE
@@ -492,9 +590,6 @@ function copy() {
 		mkdir -p $1/lib/$TYPE
 		cp -v lib/Linux/armv7l/*.a $1/lib/$TYPE
 	elif [ "$TYPE" == "android" ] ; then
-		mkdir -p $1/lib/$TYPE/armeabi
-		cp -v lib/Android/armeabi/*.a $1/lib/$TYPE/armeabi
-
 		mkdir -p $1/lib/$TYPE/armeabi-v7a
 		cp -v lib/Android/armeabi-v7a/*.a $1/lib/$TYPE/armeabi-v7a
 
@@ -505,7 +600,9 @@ function copy() {
 	fi
 
 	# copy license file
-    cp -v LICENSE $1/
+	rm -rf $1/license # remove any older files if exists
+	mkdir -p $1/license
+	cp -v LICENSE $1/license/
 }
 
 # executed inside the lib src dir
@@ -513,6 +610,8 @@ function clean() {
 
 	if [ "$TYPE" == "vs" ] ; then
 		cmd //c buildwin.cmd ${VS_VER}0 clean static_md both Win32 nosamples notests
+		cmd //c buildwin.cmd ${VS_VER}0 clean static_md both x64 nosamples notests
+		#vs-clean "Poco.sln"
 	elif [ "$TYPE" == "android" ] ; then
 		export PATH=$PATH:$ANDROID_TOOLCHAIN_ANDROIDEABI/bin:$ANDROID_TOOLCHAIN_X86/bin
 		make clean ANDROID_ABI=armeabi

@@ -29,11 +29,14 @@
  *
  * ***********************************************************************/
 
-#import "ofMain.h"
-#import "ofxiOSAppDelegate.h"
-#import "ofxiOSViewController.h"
-#import "ofxiOSExtras.h"
-#import "ofxiOSExternalDisplay.h"
+#include "ofxiOSAppDelegate.h"
+#include "ofxiOSViewController.h"
+#include "ofxiOSExternalDisplay.h"
+#include "ofxiOSExtras.h"
+#include "ofxiOSAlerts.h"
+#include "ofxiOSEAGLView.h"
+#include "ofAppiOSWindow.h"
+#include "ofAppRunner.h"
 
 @implementation ofxiOSAppDelegate
 
@@ -87,11 +90,11 @@
     
     bool bDoesHWOrientation = ofxiOSGetOFWindow()->doesHWOrientation();
     
-    int iOrient  = [[UIApplication sharedApplication] statusBarOrientation];
+    UIInterfaceOrientation iOrient  = [[UIApplication sharedApplication] statusBarOrientation];
     // is the os version less than 6.0? 
     if( [[[UIDevice currentDevice] systemVersion] compare:@"6.0" options:NSNumericSearch] == NSOrderedAscending ) {
-        iOrient = [[UIDevice currentDevice] orientation];
-        
+		iOrient = UIInterfaceOrientationPortrait;
+		
         UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
         switch (deviceOrientation) {
             case UIDeviceOrientationPortrait:
@@ -113,76 +116,48 @@
     }
     
     BOOL bIsPortrait = UIInterfaceOrientationIsPortrait( iOrient );
-    
+	
+	CGRect frame = [[UIScreen mainScreen] bounds];
+	
+	if( (!bIsPortrait && bDoesHWOrientation)) {
+		float tWidth    = frame.size.width;
+		float tHeight   = frame.size.height;
+		frame.size.width    = tHeight;
+		frame.size.height   = tWidth;
+	}
+	
+	ofOrientation defaultOrient = ofGetOrientation();
+	
     // check if app delegate is being extended.
     // if not, create a new view controller.
     NSString * appDelegateClassName = [[self class] description];
     if ([appDelegateClassName isEqualToString:@"ofxiOSAppDelegate"]) { // app delegate is not being extended.
-        CGRect frame = [[UIScreen mainScreen] bounds];
-        
-        if( (!bIsPortrait && bDoesHWOrientation)) {
-            float tWidth    = frame.size.width;
-            float tHeight   = frame.size.height;
-            frame.size.width    = tHeight;
-            frame.size.height   = tWidth;
-        }
-        
-        ofOrientation defaultOrient = OF_ORIENTATION_UNKNOWN;
-        if(bDoesHWOrientation) {
-            
-            // update the window orientation based on the orientation of the device //
-            switch (iOrient) {
-                case UIInterfaceOrientationPortrait:
-//                    NSLog(@"applicationDidFinishLaunnching :: portrait");
-                    defaultOrient = OF_ORIENTATION_DEFAULT;
-                    break;
-                case UIInterfaceOrientationPortraitUpsideDown:
-//                    NSLog(@"applicationDidFinishLaunnching :: upside down");
-                    defaultOrient = OF_ORIENTATION_180;
-                    break;
-                case UIInterfaceOrientationLandscapeLeft:
-//                    NSLog(@"applicationDidFinishLaunnching :: landscape left");
-                    defaultOrient = OF_ORIENTATION_90_RIGHT;
-                    break;
-                case UIInterfaceOrientationLandscapeRight:
-//                    NSLog(@"applicationDidFinishLaunnching :: landscape right");
-                    defaultOrient = OF_ORIENTATION_90_LEFT;
-                    break;
-            }
-        } else {
-            defaultOrient = OF_ORIENTATION_DEFAULT;
-        }
-        
-        ofSetOrientation(defaultOrient);
-        
+		
         self.glViewController = [[[ofxiOSViewController alloc] initWithFrame:frame app:(ofxiOSApp *)ofGetAppPtr()] autorelease];
         self.window.rootViewController = self.glViewController;
         
         ofOrientation requested = ofGetOrientation();
-        
+		UIInterfaceOrientation interfaceOrientation = UIInterfaceOrientationPortrait;
+		switch (requested) {
+			case OF_ORIENTATION_DEFAULT:
+				interfaceOrientation = UIInterfaceOrientationPortrait;
+				break;
+			case OF_ORIENTATION_180:
+				interfaceOrientation = UIInterfaceOrientationPortraitUpsideDown;
+				break;
+			case OF_ORIENTATION_90_RIGHT:
+				interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
+				break;
+			case OF_ORIENTATION_90_LEFT:
+				interfaceOrientation = UIInterfaceOrientationLandscapeRight;
+				break;
+		}
+		
         if(!bDoesHWOrientation) {
             [self.glViewController rotateToInterfaceOrientation:UIInterfaceOrientationPortrait animated:false];
-        } else {
-            UIInterfaceOrientation interfaceOrientation = UIInterfaceOrientationPortrait;
-            switch (requested) {
-                case OF_ORIENTATION_DEFAULT:
-                    interfaceOrientation = UIInterfaceOrientationPortrait;
-                    break;
-                case OF_ORIENTATION_180:
-                    interfaceOrientation = UIInterfaceOrientationPortraitUpsideDown;
-                    break;
-                case OF_ORIENTATION_90_RIGHT:
-                    interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
-                    break;
-                case OF_ORIENTATION_90_LEFT:
-                    interfaceOrientation = UIInterfaceOrientationLandscapeRight;
-                    break;
-            }
-            
+		} else {
             [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation animated:NO];
-            //            self.glViewController.currentInterfaceOrientation = interfaceOrientation;
             [self.glViewController rotateToInterfaceOrientation:interfaceOrientation animated:false];
-            
             ofSetOrientation(requested);
         }
         
@@ -194,6 +169,11 @@
     [ofxiOSGetGLView() stopAnimation];
 	
 	ofxiOSAlerts.lostFocus();
+	glFinish();
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+	glFinish();
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -232,11 +212,15 @@
 - (void)receivedRotate:(NSNotification*)notification {
 	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
     ofLogVerbose("ofxiOSAppDelegate") << "device orientation changed to " << deviceOrientation;
-	if(deviceOrientation != UIDeviceOrientationUnknown && deviceOrientation != UIDeviceOrientationFaceUp && deviceOrientation != UIDeviceOrientationFaceDown ) {
-        if([self.glViewController isReadyToRotate]) {
+	if( [[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending ) {
+		//iOS7-
+		if(deviceOrientation != UIDeviceOrientationUnknown && deviceOrientation != UIDeviceOrientationFaceUp && deviceOrientation != UIDeviceOrientationFaceDown ) {
+			if([self.glViewController isReadyToRotate]) {
             ofxiOSAlerts.deviceOrientationChanged( deviceOrientation );
-        }
-        
+			}
+		}
+	}else {
+        ofxiOSAlerts.deviceOrientationChanged( deviceOrientation );
     }
 }
 
@@ -251,7 +235,6 @@
  */
 
 - (void)handleScreenConnectNotification:(NSNotification*)aNotification {
-    [self createExternalWindowWithPreferredMode]; // create external window as soon as external screen is connected to prevent unwanted mirroring.
     ofxiOSExternalDisplay::alertExternalDisplayConnected(); // alert any OF apps listening for a new external device.
 }
 
@@ -261,7 +244,7 @@
 }
 
 - (void)handleScreenModeDidChangeNotification:(NSNotification*)aNotification {
-    //
+	ofxiOSExternalDisplay::alertExternalDisplayChanged();
 }
 
 //-------------------------------------------------------------------------------------------
@@ -374,5 +357,6 @@
     
     return YES;
 }
+
 
 @end

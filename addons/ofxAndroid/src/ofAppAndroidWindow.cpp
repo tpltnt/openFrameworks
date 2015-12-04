@@ -38,7 +38,7 @@ static ofAppAndroidWindow * window;
 static ofOrientation orientation = OF_ORIENTATION_DEFAULT;
 
 static queue<ofTouchEventArgs> touchEventArgsQueue;
-static ofMutex mutex;
+static std::mutex mtx;
 static bool threadedTouchEvents = false;
 static bool appSetup = false;
 static bool accumulateTouchEvents = false;
@@ -133,12 +133,6 @@ void ofAppAndroidWindow::setup(const ofGLESWindowSettings & settings){
 	}
 
 	ofGetJNIEnv()->CallStaticVoidMethod(javaClass,method,glesVersion);
-
-    if(currentRenderer->getType()==ofGLProgrammableRenderer::TYPE){
-    	static_cast<ofGLProgrammableRenderer*>(currentRenderer.get())->setup(settings.glesVersion,0);
-    }else{
-    	static_cast<ofGLRenderer*>(currentRenderer.get())->setup();
-    }
 }
 
 void ofAppAndroidWindow::update(){
@@ -238,7 +232,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
 	JNIEnv *env;
 	ofJavaVM = vm;
-	ofLog(OF_LOG_NOTICE,"JNI_OnLoad called");
+	ofLogVerbose() << "JNI_OnLoad called";
 	if (vm->GetEnv((void**) &env, JNI_VERSION_1_4) != JNI_OK) {
 		ofLogError("ofAppAndroidWindow") << "failed to get environment using GetEnv()";
 		return -1;
@@ -268,7 +262,7 @@ Java_cc_openframeworks_OFAndroid_onPause( JNIEnv*  env, jobject  thiz ){
 
 void
 Java_cc_openframeworks_OFAndroid_onResume( JNIEnv*  env, jobject  thiz ){
-	ofLogNotice("ofAppAndroidWindow") << "onResume";
+	ofLogVerbose("ofAppAndroidWindow") << "onResume";
 	if(paused){
 		ofNotifyEvent(ofxAndroidEvents().resume);
 		paused = false;
@@ -289,21 +283,21 @@ Java_cc_openframeworks_OFAndroid_onDestroy( JNIEnv*  env, jclass  thiz ){
 void
 Java_cc_openframeworks_OFAndroid_onSurfaceDestroyed( JNIEnv*  env, jclass  thiz ){
 	surfaceDestroyed = true;
-	ofLogNotice("ofAppAndroidWindow") << "onSurfaceDestroyed";
+	ofLogVerbose("ofAppAndroidWindow") << "onSurfaceDestroyed";
 	ofNotifyEvent(ofxAndroidEvents().unloadGL);
 }
 
 void
 Java_cc_openframeworks_OFAndroid_onSurfaceCreated( JNIEnv*  env, jclass  thiz ){
 	if(appSetup){
-		ofLogNotice("ofAppAndroidWindow") << "onSurfaceCreated";
+		ofLogVerbose("ofAppAndroidWindow") << "onSurfaceCreated";
 		if(!surfaceDestroyed){
 			ofNotifyEvent(ofxAndroidEvents().unloadGL);
 		}
 		ofNotifyEvent(ofxAndroidEvents().reloadGL);
-		ofPushStyle();
+		window->renderer()->pushStyle();
 		window->renderer()->setupGraphicDefaults();
-		ofPopStyle();
+		window->renderer()->popStyle();
 		surfaceDestroyed = false;
 	}else{
 	    if(window->renderer()->getType()==ofGLProgrammableRenderer::TYPE){
@@ -311,18 +305,20 @@ Java_cc_openframeworks_OFAndroid_onSurfaceCreated( JNIEnv*  env, jclass  thiz ){
 	    }else{
 	    	static_cast<ofGLRenderer*>(window->renderer().get())->setup();
 	    }
-	    ofLogNotice() << "renderer created";
 	}
 }
 
 void
 Java_cc_openframeworks_OFAndroid_setup( JNIEnv*  env, jclass  thiz, jint w, jint h  )
 {
-	ofLogNotice("ofAppAndroidWindow") << "setup";
+	ofLogVerbose("ofAppAndroidWindow") << "setup " << w << "x" << h;
 	paused = false;
     sWindowWidth  = w;
     sWindowHeight = h;
+	window->renderer()->startRender();
+	if(bSetupScreen) window->renderer()->setupScreen();
 	window->events().notifySetup();
+	window->renderer()->finishRender();
 	appSetup = true;
 }
 
@@ -350,10 +346,10 @@ Java_cc_openframeworks_OFAndroid_render( JNIEnv*  env, jclass  thiz )
 	if(paused || surfaceDestroyed) return;
 
 	if(!threadedTouchEvents){
-		mutex.lock();
+		mtx.lock();
 		queue<ofTouchEventArgs> events = touchEventArgsQueue;
 		while(!touchEventArgsQueue.empty()) touchEventArgsQueue.pop();
-		mutex.unlock();
+		mtx.unlock();
 
 		while(!events.empty()){
 			switch(events.front().type){
@@ -380,10 +376,10 @@ Java_cc_openframeworks_OFAndroid_render( JNIEnv*  env, jclass  thiz )
 			events.pop();
 		}
 	}
-	window->events().notifyUpdate();
 
 
 	window->renderer()->startRender();
+	window->events().notifyUpdate();
 	if(bSetupScreen) window->renderer()->setupScreen();
 	window->events().notifyDraw();
 	window->renderer()->finishRender();
@@ -405,9 +401,9 @@ Java_cc_openframeworks_OFAndroid_onTouchDown(JNIEnv*  env, jclass  thiz, jint id
 		window->events().notifyMousePressed(x,y,0);
 		ofNotifyEvent(window->events().touchDown,touch);
 	}else{
-		mutex.lock();
+		mtx.lock();
 		touchEventArgsQueue.push(touch);
-		mutex.unlock();
+		mtx.unlock();
 	}
 }
 
@@ -426,9 +422,9 @@ Java_cc_openframeworks_OFAndroid_onTouchUp(JNIEnv*  env, jclass  thiz, jint id,j
 		window->events().notifyMouseReleased(x,y,0);
 		ofNotifyEvent(window->events().touchUp,touch);
 	}else{
-		mutex.lock();
+		mtx.lock();
 		touchEventArgsQueue.push(touch);
-		mutex.unlock();
+		mtx.unlock();
 	}
 }
 
@@ -443,9 +439,9 @@ Java_cc_openframeworks_OFAndroid_onTouchCancelled(JNIEnv*  env, jclass  thiz, ji
 	if(threadedTouchEvents){
 		ofNotifyEvent(window->events().touchCancelled,touch);
 	}else{
-		mutex.lock();
+		mtx.lock();
 		touchEventArgsQueue.push(touch);
-		mutex.unlock();
+		mtx.unlock();
 	}
 }
 
@@ -465,13 +461,13 @@ Java_cc_openframeworks_OFAndroid_onTouchMoved(JNIEnv*  env, jclass  thiz, jint i
 		window->events().notifyMouseDragged(x,y,0);
 		ofNotifyEvent(window->events().touchMoved,touch);
 	}else{
-		mutex.lock();
+		mtx.lock();
 		if(accumulateTouchEvents && !touchEventArgsQueue.empty() && touchEventArgsQueue.back().type==ofTouchEventArgs::move){
 			touchEventArgsQueue.back() = touch;
 		}else{
 			touchEventArgsQueue.push(touch);
 		}
-		mutex.unlock();
+		mtx.unlock();
 	}
 }
 
@@ -487,9 +483,9 @@ Java_cc_openframeworks_OFAndroid_onTouchDoubleTap(JNIEnv*  env, jclass  thiz, ji
 		window->events().notifyMousePressed(x,y,0);
 		ofNotifyEvent(window->events().touchDoubleTap,touch);
 	}else{
-		mutex.lock();
+		mtx.lock();
 		touchEventArgsQueue.push(touch);
-		mutex.unlock();
+		mtx.unlock();
 	}
 }
 
@@ -497,6 +493,37 @@ void
 Java_cc_openframeworks_OFAndroid_onSwipe(JNIEnv*  env, jclass  thiz, jint id, jint swipeDir){
 	ofxAndroidSwipeEventArgs swipe{(ofxAndroidSwipeDir)swipeDir,id};
 	ofNotifyEvent(ofxAndroidEvents().swipe,swipe);
+}
+
+jboolean
+Java_cc_openframeworks_OFAndroid_onScale(JNIEnv*  env, jclass  thiz, jobject detector){
+	try{
+		ofxAndroidScaleEventArgs scale(detector);
+		ofxAndroidEvents().scale.notify(nullptr,scale);
+	}catch(...){
+		return true;
+	}
+	return false;
+}
+
+jboolean
+Java_cc_openframeworks_OFAndroid_onScaleBegin(JNIEnv*  env, jclass  thiz, jobject detector){
+	try{
+		ofxAndroidScaleEventArgs scale(detector);
+		ofxAndroidEvents().scaleBegin.notify(nullptr,scale);
+	}catch(...){
+		return true;
+	}
+	return false;
+}
+
+void
+Java_cc_openframeworks_OFAndroid_onScaleEnd(JNIEnv*  env, jclass  thiz, jobject detector){
+	try{
+		ofxAndroidScaleEventArgs scale(detector);
+		ofxAndroidEvents().scaleEnd.notify(nullptr,scale);
+	}catch(...){
+	}
 }
 
 void

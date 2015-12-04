@@ -46,35 +46,24 @@ void ofSeedRandom(int val) {
 
 //--------------------------------------------------
 float ofRandom(float max) {
-	return max * rand() / (RAND_MAX + 1.0f);
+	return (max * rand() / float(RAND_MAX)) * (1.0f - std::numeric_limits<float>::epsilon());
 }
 
 //--------------------------------------------------
 float ofRandom(float x, float y) {
-
-	float high = 0;
-	float low = 0;
-	float randNum = 0;
-	// if there is no range, return the value
-	if (x == y) return x; 			// float == ?, wise? epsilon?
-	high = MAX(x,y);
-	low = MIN(x,y);
-	randNum = low + ((high-low) * rand()/(RAND_MAX + 1.0f));
-	return randNum;
+	float high = MAX(x, y);
+	float low = MIN(x, y);
+	return max(low, (low + ((high - low) * rand() / float(RAND_MAX))) * (1.0f - std::numeric_limits<float>::epsilon()));
 }
 
 //--------------------------------------------------
 float ofRandomf() {
-	float randNum = 0;
-	randNum = (rand()/(RAND_MAX + 1.0f)) * 2.0f - 1.0f;
-	return randNum;
+	return -1.0f + (2.0f * rand() / float(RAND_MAX)) * (1.0f - std::numeric_limits<float>::epsilon());
 }
 
 //--------------------------------------------------
 float ofRandomuf() {
-	float randNum = 0;
-	randNum = rand()/(RAND_MAX + 1.0f);
-	return randNum;
+	return (rand() / float(RAND_MAX)) * (1.0f - std::numeric_limits<float>::epsilon());
 }
 
 //---- new to 006
@@ -90,7 +79,6 @@ float ofNormalize(float value, float min, float max){
 float ofMap(float value, float inputMin, float inputMax, float outputMin, float outputMax, bool clamp) {
 
 	if (fabs(inputMin - inputMax) < FLT_EPSILON){
-		ofLogWarning("ofMath") << "ofMap(): avoiding possible divide by zero, check inputMin and inputMax: " << inputMin << " " << inputMax;
 		return outputMin;
 	} else {
 		float outVal = ((value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin);

@@ -19,8 +19,8 @@
 #include "ofxAssimpAnimation.h"
 #include "ofxAssimpTexture.h"
 
-class aiScene;
-class aiNode;
+struct aiScene;
+struct aiNode;
 
 class ofxAssimpModelLoader{
 
@@ -61,7 +61,7 @@ class ofxAssimpModelLoader{
         void setRotation(int which, float angle, float rot_x, float rot_y, float r_z);
 
         // Scale the model to the screen automatically.
-        void setScaleNomalization(bool normalize);
+        void setScaleNormalization(bool normalize);
         void setNormalizationFactor(float factor);
 
         vector<string> getMeshNames();
@@ -113,8 +113,6 @@ class ofxAssimpModelLoader{
 		const aiScene * getAssimpScene();
          
     protected:
-    
-		void onAppExit(ofEventArgs & args);
         void updateAnimations();
         void updateMeshes(aiNode * node, ofMatrix4x4 parentMatrix);
         void updateBones();
@@ -127,14 +125,11 @@ class ofxAssimpModelLoader{
         // Initial VBO creation, etc
         void loadGLResources();
     
-        // Updates the internal animation transforms for the selected animation index
-        void updateAnimation(unsigned int animationIndex, float time);
-    
         // updates the *actual GL resources* for the current animation
         void updateGLResources();
     
-        void getBoundingBoxWithMinVector(struct aiVector3D* min, struct aiVector3D* max);
-        void getBoundingBoxForNode(const struct aiNode* nd,  struct aiVector3D* min, struct aiVector3D* max, struct aiMatrix4x4* trafo);
+        void getBoundingBoxWithMinVector( aiVector3D* min, aiVector3D* max);
+        void getBoundingBoxForNode(const ofxAssimpMeshHelper & mesh,  aiVector3D* min, aiVector3D* max);
 
         ofFile file;
 
@@ -163,4 +158,5 @@ class ofxAssimpModelLoader{
 
         // the main Asset Import scene that does the magic.
         shared_ptr<const aiScene> scene;
+        shared_ptr<aiPropertyStore> store; 
 };
